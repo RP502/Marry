@@ -1,0 +1,7 @@
+{
+  "name": "Chung Đôi - Website Đám Cưới & Thiệp Cưới Online",
+  "description": "Nền tảng tạo website đám cưới và thiệp cưới online thông minh hàng đầu Việt Nam. Tùy chỉnh thiệp cưới, quản lý khách mời RSVP, hộp mừng cưới VietQR và lưu giữ sổ lưu bút.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+

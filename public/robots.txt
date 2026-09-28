@@ -1,0 +1,33 @@
+# Robots.txt for ChungDoi.com
+User-agent: *
+Allow: /
+Allow: /vi
+Allow: /vi/mau-thiep
+Allow: /vi/cong-cu
+Allow: /vi/ke-hoach-cuoi
+Allow: /vi/tin-nhan-moi-cuoi
+Allow: /vi/bai-phat-bieu-dam-cuoi
+Allow: /vi/loi-chuc-dam-cuoi
+Allow: /vi/giam-dung-luong-anh
+Allow: /vi/tao-anh-bao-hy
+Allow: /vi/doi-ngay-am-duong
+Allow: /vi/du-tru-chi-phi-cuoi
+Allow: /vi/danh-sach-khach-moi
+Allow: /vi/blog
+
+# Block admin/private areas
+Disallow: /api/
+Disallow: /admin/
+Disallow: /edit/
+Disallow: /dashboard/
+Disallow: /login
+Disallow: /signup
+Disallow: /verify-magic-link
+Disallow: /xac-minh
+Disallow: /account
+Disallow: /payment
+Disallow: /xem-khach/
+Disallow: /public-analytics
+Disallow: /share/
+
+Sitemap: https://chungdoi.com/sitemap.xml
