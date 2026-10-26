@@ -5,7 +5,7 @@ export const INITIAL_USER_ACCOUNT: UserAccount = {
   email: 'minhtriet.thaovy@gmail.com',
   fullName: 'Minh Triết & Thảo Vy',
   phone: '0988 123 456',
-  role: 'admin', // Can access both user dashboard and /admin
+  role: 'user',
   plan: 'pro',
   weddingTitle: 'Đám Cưới Minh Triết & Thảo Vy',
   weddingSlug: 'minh-triet-thao-vy',

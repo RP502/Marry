@@ -98,7 +98,7 @@ export const GuestViewerPage: React.FC<GuestViewerPageProps> = ({
     const matchSearch =
       g.name.toLowerCase().includes(search.toLowerCase()) ||
       (g.phone && g.phone.includes(search)) ||
-      g.relationship.toLowerCase().includes(search.toLowerCase());
+      (g.relationship || '').toLowerCase().includes(search.toLowerCase());
     const matchStatus = filterStatus === 'all' || g.attendingStatus === filterStatus;
     return matchSearch && matchStatus;
   });

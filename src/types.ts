@@ -28,7 +28,9 @@ export type ViewMode =
   | 'payment'
   | 'xem-khach'
   | 'public-analytics'
-  | 'share';
+  | 'share'
+  | 'customs'
+  | 'services';
 
 export interface UserAccount {
   id: string;
@@ -229,10 +231,12 @@ export interface WeddingData {
 export interface Guest {
   id: string;
   name: string;
+  relationship?: string;
   phone?: string;
   side: 'groom' | 'bride' | 'mutual';
   attendingStatus: 'attending' | 'not_attending' | 'tentative' | 'pending';
   guestCount: number;
+  accompanyingGuests?: number;
   dietaryNotes?: string;
   wishes?: string;
   customSalutation?: string; // e.g. "Anh", "Chị", "Bạn", "Gia đình"

@@ -26,23 +26,33 @@ export const ShareCenterPage: React.FC<ShareCenterPageProps> = ({
   const [copiedLink, setCopiedLink] = useState(false);
   const [copiedZaloMsg, setCopiedZaloMsg] = useState(false);
 
-  const weddingUrl = `${window.location.origin}/invitation`;
+  const weddingUrl = `${window.location.origin}/${weddingData.slug}`;
   const qrDownloadUrl = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(
     weddingUrl
   )}&color=e11d48`;
 
-  const zaloGreeting = `Thân gửi bạn và gia đình! ${weddingData.groom.name} & ${weddingData.bride.name} trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng mình vào ngày ${weddingData.events.ceremony.date}.\n\nXem chi tiết thiệp cưới, ảnh cưới và sơ đồ đường đi tại: ${weddingUrl}`;
+  const zaloGreeting = `Thân gửi bạn và gia đình! ${weddingData.groom.name} & ${weddingData.bride.name} trân trọng kính mời bạn đến chung vui trong ngày trọng đại của chúng mình vào ngày ${weddingData.mainCeremony.date}.\n\nXem chi tiết thiệp cưới, ảnh cưới và sơ đồ đường đi tại: ${weddingUrl}`;
 
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(weddingUrl);
-    setCopiedLink(true);
-    setTimeout(() => setCopiedLink(false), 2000);
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(weddingUrl);
+      setCopiedLink(true);
+      setTimeout(() => setCopiedLink(false), 2000);
+    } catch (error) {
+      console.error('Unable to copy wedding link', error);
+      window.alert('Không thể tự động sao chép. Hãy chọn và sao chép đường link trong ô bên cạnh.');
+    }
   };
 
-  const handleCopyZaloMsg = () => {
-    navigator.clipboard.writeText(zaloGreeting);
-    setCopiedZaloMsg(true);
-    setTimeout(() => setCopiedZaloMsg(false), 2000);
+  const handleCopyZaloMsg = async () => {
+    try {
+      await navigator.clipboard.writeText(zaloGreeting);
+      setCopiedZaloMsg(true);
+      setTimeout(() => setCopiedZaloMsg(false), 2000);
+    } catch (error) {
+      console.error('Unable to copy invitation message', error);
+      window.alert('Không thể tự động sao chép. Hãy chọn và sao chép nội dung lời mời.');
+    }
   };
 
   return (
@@ -159,7 +169,7 @@ export const ShareCenterPage: React.FC<ShareCenterPageProps> = ({
                     Thiệp Cưới Online: {weddingData.groom.fullName} &amp; {weddingData.bride.fullName}
                   </h4>
                   <p className="text-[11px] text-stone-500 line-clamp-2 mt-0.5">
-                    Trân trọng kính mời quý khách đến dự lễ thành hôn vào ngày {weddingData.events.ceremony.date} tại {weddingData.events.ceremony.venue}.
+                    Trân trọng kính mời quý khách đến dự lễ thành hôn vào ngày {weddingData.mainCeremony.date} tại {weddingData.mainCeremony.venueName}.
                   </p>
                   <span className="text-[10px] text-stone-400 block mt-1">chungdoi.com</span>
                 </div>

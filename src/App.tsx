@@ -24,6 +24,9 @@ import { PaymentCheckout } from './components/PaymentCheckout';
 import { PublicAnalyticsView } from './components/PublicAnalyticsView';
 import { ShareCenterPage } from './components/ShareCenterPage';
 import { GuestViewerPage } from './components/GuestViewerPage';
+import { CustomsAdvisorPage } from './components/CustomsAdvisorPage';
+import { ChatbotWidget } from './components/ChatbotWidget';
+import { WeddingServicesPage } from './components/WeddingServicesPage';
 import { INITIAL_USER_ACCOUNT } from './data/adminMockData';
 import { UserAccount } from './types';
 
@@ -37,9 +40,9 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(() => {
     try {
       const saved = localStorage.getItem('chungdoi_current_user');
-      return saved ? JSON.parse(saved) : INITIAL_USER_ACCOUNT;
+      return saved ? JSON.parse(saved) : null;
     } catch {
-      return INITIAL_USER_ACCOUNT;
+      return null;
     }
   });
 
@@ -90,6 +93,8 @@ export default function App() {
     } else if (path) {
       if (path === 'edit') {
         setCurrentView('builder');
+      } else if (path === INITIAL_WEDDING_DATA.slug) {
+        setCurrentView('invitation');
       } else if ([
         'admin',
         'dashboard',
@@ -102,6 +107,8 @@ export default function App() {
         'xem-khach',
         'public-analytics',
         'share',
+        'customs',
+        'services',
         'tools',
         'blog',
         'pricing',
@@ -113,6 +120,24 @@ export default function App() {
       }
     }
   }, []);
+
+  useEffect(() => {
+    const privateViews: ViewMode[] = [
+      'builder',
+      'rsvp-dashboard',
+      'dashboard',
+      'account',
+      'payment',
+      'public-analytics',
+      'share',
+      'xem-khach',
+    ];
+    if (currentView === 'admin' && currentUser?.role !== 'admin') {
+      setCurrentView(currentUser ? 'dashboard' : 'login');
+    } else if (privateViews.includes(currentView) && !currentUser) {
+      setCurrentView('login');
+    }
+  }, [currentView, currentUser]);
 
   // Save to localStorage when state changes
   useEffect(() => {
@@ -259,6 +284,15 @@ export default function App() {
           />
         )}
 
+        {currentView === 'services' && (
+          <WeddingServicesPage
+            onNavigate={(view) => {
+              setCurrentView(view);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {currentView === 'templates' && (
           <TemplatesPage
             onSelectTemplate={handleSelectTemplate}
@@ -361,6 +395,15 @@ export default function App() {
           />
         )}
 
+        {currentView === 'customs' && (
+          <CustomsAdvisorPage
+            onNavigate={(view) => {
+              setCurrentView(view);
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+          />
+        )}
+
         {currentView === 'pricing' && (
           <PricingPage
             onNavigate={(view) => {
@@ -372,8 +415,9 @@ export default function App() {
         )}
 
         {/* Admin Portal (/admin/) */}
-        {currentView === 'admin' && (
+        {currentView === 'admin' && currentUser?.role === 'admin' && (
           <AdminPortal
+            currentUser={currentUser}
             onNavigate={(view) => {
               setCurrentView(view);
               window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -473,12 +517,12 @@ export default function App() {
           currentView === 'verify-magic-link' ||
           currentView === 'xac-minh') && (
           <AuthModalOrView
-            mode={currentView}
+            initialMode={currentView === 'verify-magic-link' || currentView === 'xac-minh' ? 'verify' : currentView}
             onNavigate={(view) => {
               setCurrentView(view);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            onAuthSuccess={(user) => {
+            onLoginSuccess={(user) => {
               setCurrentUser(user);
               localStorage.setItem('chungdoi_current_user', JSON.stringify(user));
               setCurrentView('dashboard');
@@ -493,6 +537,7 @@ export default function App() {
         onClose={() => setIsShareModalOpen(false)}
         weddingData={weddingData}
       />
+      <ChatbotWidget currentUser={currentUser} currentView={currentView} />
     </div>
   );
 }

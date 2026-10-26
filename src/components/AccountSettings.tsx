@@ -32,7 +32,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
   const [fullName, setFullName] = useState(user?.fullName || `${weddingData.groom.fullName} & ${weddingData.bride.fullName}`);
   const [email, setEmail] = useState(user?.email || 'minhtriet.thaovy@gmail.com');
   const [phone, setPhone] = useState(user?.phone || '0988 123 456');
-  const [weddingDate, setWeddingDate] = useState(user?.weddingDate || weddingData.events.ceremony.date);
+  const [weddingDate, setWeddingDate] = useState(user?.weddingDate || weddingData.mainCeremony.date);
   const [toast, setToast] = useState<string | null>(null);
 
   const [currentPassword, setCurrentPassword] = useState('');

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ShieldAlert,
   Users,
@@ -23,6 +23,7 @@ import {
 } from 'lucide-react';
 import { ViewMode, AdminWeddingRecord, UserAccount } from '../types';
 import { ADMIN_WEDDINGS_LIST } from '../data/adminMockData';
+import { CUSTOMS_ARTICLES } from '../data/customsData';
 
 interface AdminPortalProps {
   onNavigate: (view: ViewMode) => void;
@@ -35,8 +36,23 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   currentUser,
   onLogout,
 }) => {
-  const [activeTab, setActiveTab] = useState<'weddings' | 'users' | 'transactions' | 'analytics' | 'system'>('weddings');
+  const [activeTab, setActiveTab] = useState<'weddings' | 'users' | 'transactions' | 'analytics' | 'knowledge' | 'system'>('weddings');
   const [weddings, setWeddings] = useState<AdminWeddingRecord[]>(ADMIN_WEDDINGS_LIST);
+  const [knowledgeStatus, setKnowledgeStatus] = useState<Record<string, boolean>>(
+    () => {
+      try {
+        const saved = localStorage.getItem('chungdoi_knowledge_status');
+        return saved
+          ? JSON.parse(saved) as Record<string, boolean>
+          : Object.fromEntries(CUSTOMS_ARTICLES.map((article) => [article.id, true]));
+      } catch {
+        return Object.fromEntries(CUSTOMS_ARTICLES.map((article) => [article.id, true]));
+      }
+    },
+  );
+  useEffect(() => {
+    localStorage.setItem('chungdoi_knowledge_status', JSON.stringify(knowledgeStatus));
+  }, [knowledgeStatus]);
   const [searchQuery, setSearchQuery] = useState('');
   const [filterPlan, setFilterPlan] = useState<string>('all');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -247,6 +263,18 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           </button>
 
           <button
+            onClick={() => setActiveTab('knowledge')}
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-colors whitespace-nowrap flex items-center space-x-2 ${
+              activeTab === 'knowledge'
+                ? 'bg-rose-600 text-white shadow-sm'
+                : 'text-stone-400 hover:text-white hover:bg-stone-800'
+            }`}
+          >
+            <Sparkles className="w-3.5 h-3.5" />
+            <span>Kho tri thức chatbot</span>
+          </button>
+
+          <button
             onClick={() => setActiveTab('system')}
             className={`px-4 py-2.5 rounded-xl text-xs font-bold transition-colors whitespace-nowrap flex items-center space-x-2 ${
               activeTab === 'system'
@@ -382,6 +410,44 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   ))}
                 </tbody>
               </table>
+            </div>
+          </div>
+        )}
+
+        {activeTab === 'knowledge' && (
+          <div className="bg-stone-800/80 border border-stone-700/80 rounded-2xl overflow-hidden">
+            <div className="border-b border-stone-700 p-6">
+              <h3 className="text-base font-bold text-white">Quản lý kho tri thức phong tục</h3>
+              <p className="mt-1 text-xs leading-5 text-stone-400">
+                Kiểm tra chủ đề, vùng miền, nguồn tham khảo và trạng thái hiển thị trước khi chatbot sử dụng.
+              </p>
+            </div>
+            <div className="divide-y divide-stone-700/60">
+              {CUSTOMS_ARTICLES.map((article) => (
+                <div key={article.id} className="flex flex-col gap-3 p-5 sm:flex-row sm:items-center sm:justify-between">
+                  <div>
+                    <div className="flex flex-wrap gap-2 text-[10px] font-bold uppercase tracking-wider text-rose-300">
+                      <span>{article.region === 'bac' ? 'Miền Bắc' : article.region === 'trung' ? 'Miền Trung' : 'Miền Nam'}</span>
+                      <span>{article.topic}</span>
+                    </div>
+                    <p className="mt-1 text-sm font-bold text-white">{article.title}</p>
+                    <p className="mt-1 text-xs text-stone-400">Nguồn: {article.sources.join('; ')}</p>
+                  </div>
+                  <button
+                    onClick={() => {
+                      setKnowledgeStatus((current) => ({ ...current, [article.id]: !current[article.id] }));
+                      showToast(knowledgeStatus[article.id] ? 'Đã ẩn nội dung khỏi chatbot' : 'Đã bật nội dung cho chatbot');
+                    }}
+                    className={`rounded-xl px-3 py-2 text-xs font-bold ${
+                      knowledgeStatus[article.id]
+                        ? 'bg-emerald-500/20 text-emerald-300'
+                        : 'bg-stone-700 text-stone-400'
+                    }`}
+                  >
+                    {knowledgeStatus[article.id] ? 'Đang xuất bản' : 'Đã ẩn'}
+                  </button>
+                </div>
+              ))}
             </div>
           </div>
         )}

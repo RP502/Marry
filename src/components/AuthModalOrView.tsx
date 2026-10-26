@@ -27,10 +27,10 @@ export const AuthModalOrView: React.FC<AuthModalOrViewProps> = ({
   onLoginSuccess,
 }) => {
   const [mode, setMode] = useState<'login' | 'signup' | 'verify'>(initialMode);
-  const [email, setEmail] = useState('minhtriet.thaovy@gmail.com');
-  const [password, setPassword] = useState('chungdoi@2026');
-  const [coupleNames, setCoupleNames] = useState('Minh Triết & Thảo Vy');
-  const [phone, setPhone] = useState('0988 123 456');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [coupleNames, setCoupleNames] = useState('');
+  const [phone, setPhone] = useState('');
   const [otpCode, setOtpCode] = useState(['', '', '', '', '', '']);
   const [isLoading, setIsLoading] = useState(false);
   const [notification, setNotification] = useState<string | null>(null);
@@ -40,7 +40,14 @@ export const AuthModalOrView: React.FC<AuthModalOrViewProps> = ({
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
-      onLoginSuccess(INITIAL_USER_ACCOUNT);
+      const users = JSON.parse(localStorage.getItem('chungdoi_users') || '[]') as Array<UserAccount & { password: string }>;
+      const matchedUser = users.find((user) => user.email.toLowerCase() === email.toLowerCase() && user.password === password);
+      if (!matchedUser) {
+        setNotification('Email hoặc mật khẩu chưa đúng. Bạn có thể đăng ký tài khoản mới.');
+        return;
+      }
+      const { password: _password, ...user } = matchedUser;
+      onLoginSuccess(user);
       onNavigate('dashboard');
     }, 600);
   };
@@ -50,6 +57,10 @@ export const AuthModalOrView: React.FC<AuthModalOrViewProps> = ({
     setIsLoading(true);
     setTimeout(() => {
       setIsLoading(false);
+      if (!email || password.length < 6 || !coupleNames.trim()) {
+        setNotification('Vui lòng nhập đủ thông tin và mật khẩu tối thiểu 6 ký tự.');
+        return;
+      }
       setNotification(`Mã xác minh 6 chữ số đã được gửi đến email ${email}`);
       setMode('verify');
     }, 600);
@@ -62,10 +73,20 @@ export const AuthModalOrView: React.FC<AuthModalOrViewProps> = ({
       setIsLoading(false);
       const newUser: UserAccount = {
         ...INITIAL_USER_ACCOUNT,
+        id: `usr-${Date.now()}`,
+        role: 'user',
         fullName: coupleNames,
         email,
         phone,
       };
+      const users = JSON.parse(localStorage.getItem('chungdoi_users') || '[]') as Array<UserAccount & { password: string }>;
+      const accountExists = users.some((user) => user.email.toLowerCase() === email.toLowerCase());
+      if (accountExists) {
+        setNotification('Email này đã được đăng ký. Hãy đăng nhập để tiếp tục.');
+        setMode('login');
+        return;
+      }
+      localStorage.setItem('chungdoi_users', JSON.stringify([...users, { ...newUser, password }]));
       onLoginSuccess(newUser);
       onNavigate('dashboard');
     }, 600);
@@ -176,22 +197,6 @@ export const AuthModalOrView: React.FC<AuthModalOrViewProps> = ({
                 </>
               )}
             </button>
-
-            <div className="pt-2 text-center">
-              <button
-                type="button"
-                onClick={() => {
-                  onLoginSuccess({
-                    ...INITIAL_USER_ACCOUNT,
-                    role: 'admin',
-                  });
-                  onNavigate('admin');
-                }}
-                className="text-[11px] text-stone-400 hover:text-stone-700 underline"
-              >
-                Đăng nhập nhanh với quyền Master Admin (/admin)
-              </button>
-            </div>
 
             <div className="pt-4 border-t border-stone-100 text-center text-xs text-stone-500">
               Chưa có tài khoản?{' '}

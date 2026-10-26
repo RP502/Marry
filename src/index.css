@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #fbf8f3;
+  color: #3f3833;
+  -webkit-font-smoothing: antialiased;
+}
+
 @layer utilities {
   .font-script {
     font-family: 'Great Vibes', 'Alex Brush', cursive;
@@ -13,7 +24,68 @@
   .font-body {
     font-family: 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
+
+  .text-balance {
+    text-wrap: balance;
+  }
 }
+
+  @keyframes template-preview-scroll {
+    0%, 12% {
+      transform: translateY(0);
+    }
+    78%, 88% {
+      transform: translateY(calc(-100% + 400px));
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+
+  .template-scroll-image {
+    display: block;
+    min-height: 100%;
+  }
+
+  .template-scroll-image-active {
+    height: auto;
+    min-height: 125%;
+    animation: template-preview-scroll 6.5s ease-in-out infinite;
+  }
+
+  .template-carousel-card {
+    --carousel-gap: 122px;
+    transform: translate(-50%, -50%) scale(var(--carousel-scale)) rotateY(calc(var(--carousel-offset) * -13deg));
+    transform-origin: center center;
+  }
+
+  @media (min-width: 640px) {
+    .template-scroll-image-active {
+      min-height: 115%;
+      animation-name: template-preview-scroll-desktop;
+    }
+
+    .template-carousel-card {
+      --carousel-gap: 218px;
+      transform: translate(-50%, -50%) scale(var(--carousel-scale)) rotateY(calc(var(--carousel-offset) * -14deg));
+    }
+
+    .template-carousel-track {
+      perspective: 1300px;
+    }
+  }
+
+  @keyframes template-preview-scroll-desktop {
+    0%, 12% {
+      transform: translateY(0);
+    }
+    78%, 88% {
+      transform: translateY(calc(-100% + 500px));
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {

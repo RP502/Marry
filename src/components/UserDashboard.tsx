@@ -41,8 +41,8 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
 }) => {
   const [copiedLink, setCopiedLink] = useState(false);
 
-  const weddingUrl = `${window.location.origin}/?guest=`;
-  const liveSlugUrl = `${window.location.origin}/invitation`;
+  const weddingUrl = `${window.location.origin}/${weddingData.slug}?guest=`;
+  const liveSlugUrl = `${window.location.origin}/${weddingData.slug}`;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(liveSlugUrl);
@@ -51,7 +51,7 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
   };
 
   const attendingGuests = guests.filter((g) => g.attendingStatus === 'attending');
-  const totalAccompanying = attendingGuests.reduce((sum, g) => sum + (g.accompanyingGuests || 0), 0);
+  const totalAccompanying = attendingGuests.reduce((sum, g) => sum + Math.max(0, g.guestCount - 1), 0);
   const totalConfirmedPeople = attendingGuests.length + totalAccompanying;
 
   return (
@@ -91,17 +91,17 @@ export const UserDashboard: React.FC<UserDashboardProps> = ({
               </div>
 
               <h1 className="text-2xl sm:text-3xl font-bold font-display text-stone-900">
-                {weddingData.groom.fullName} &amp; {weddingData.bride.fullName}
+                {weddingData.groom.shortName} &amp; {weddingData.bride.shortName}
               </h1>
               <p className="text-xs sm:text-sm text-stone-500 mt-1 flex items-center space-x-2">
                 <Calendar className="w-4 h-4 text-stone-400" />
                 <span>
                   Ngày cưới:{' '}
-                  <strong>{weddingData.events.ceremony.date}</strong> (
-                  {weddingData.events.ceremony.lunarDate})
+                  <strong>{weddingData.mainCeremony.date}</strong> (
+                  {weddingData.mainCeremony.lunarDate})
                 </span>
                 <span>&bull;</span>
-                <span>{weddingData.events.ceremony.venue}</span>
+                <span>{weddingData.mainCeremony.venueName}</span>
               </p>
             </div>
 

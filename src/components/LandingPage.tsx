@@ -1,33 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  Heart,
-  Sparkles,
   ArrowRight,
-  CheckCircle2,
-  QrCode,
-  Music,
-  MapPin,
-  Users,
-  Smartphone,
-  ShieldCheck,
-  Star,
+  Check,
   ChevronRight,
+  Heart,
+  MessageCircle,
+  Camera,
+  Shirt,
+  BarChart3,
+  ChevronDown,
   Play,
-  Palette,
-  Clock,
-  ExternalLink,
-  Calculator,
-  CheckSquare,
-  MessageSquare,
-  Mic,
-  CalendarDays,
-  Image as ImageIcon,
-  Grid,
-  BookOpen,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  WandSparkles,
 } from 'lucide-react';
-import { ViewMode, Language, WeddingTemplate } from '../types';
+import { Language, ViewMode, WeddingTemplate } from '../types';
 import { WEDDING_TEMPLATES } from '../data/mockData';
-import { BLOG_POSTS } from '../data/weddingToolsData';
+import { WEDDING_SERVICES } from '../data/weddingServicesData';
 
 interface LandingPageProps {
   onNavigate: (view: ViewMode) => void;
@@ -35,1138 +25,351 @@ interface LandingPageProps {
   lang: Language;
 }
 
+const referenceTemplateImages = [
+  'https://assets.chungdoi.com/template-previews/vi/listing/song_hy_red.197afce7.webp',
+  'https://assets.chungdoi.com/template-previews/vi/listing/song_hy_green.7f0d10fa.webp',
+  'https://assets.chungdoi.com/template-previews/vi/listing/double_dragon_red.e3dd75ad.webp',
+  'https://assets.chungdoi.com/template-previews/vi/listing/double_phoenix_red.3bba531a.webp',
+];
+
 export const LandingPage: React.FC<LandingPageProps> = ({
   onNavigate,
   onSelectTemplate,
   lang,
 }) => {
-  const [selectedStyle, setSelectedStyle] = useState<string>('all');
-  const [activeFaq, setActiveFaq] = useState<number | null>(null);
-
-  const filterStyles = [
-    { id: 'all', label: lang === 'vi' ? 'Tất cả phong cách' : 'All Styles' },
-    { id: 'floral', label: lang === 'vi' ? 'Lãng mạn Pastel' : 'Romantic Floral' },
-    { id: 'luxury', label: lang === 'vi' ? 'Sang trọng Quý phái' : 'Luxury Gold' },
-    { id: 'modern', label: lang === 'vi' ? 'Tối giản Hiện đại' : 'Minimalist' },
-    { id: 'traditional', label: lang === 'vi' ? 'Truyền thống Á Đông' : 'Traditional' },
-    { id: 'vintage', label: lang === 'vi' ? 'Vintage Mộc mạc' : 'Vintage' },
-    { id: 'korean', label: lang === 'vi' ? 'Hàn Quốc Dịu Dàng' : 'Korean' },
+  const featuredTemplates = WEDDING_TEMPLATES.slice(0, 6);
+  const [activeTemplateIndex, setActiveTemplateIndex] = useState(0);
+  const benefits = [
+    ['01', 'Đẹp và tinh tế', 'Mẫu thiệp được thiết kế chỉn chu, tôn lên câu chuyện riêng của hai bạn.'],
+    ['02', 'Tạo trong vài phút', 'Chọn mẫu, thêm ảnh và thông tin. Không cần biết thiết kế hay công nghệ.'],
+    ['03', 'Gửi được mọi nơi', 'Chia sẻ qua Zalo, Messenger, email hoặc tạo mã QR để khách dễ dàng truy cập.'],
   ];
 
-  const filteredTemplates =
-    selectedStyle === 'all'
-      ? WEDDING_TEMPLATES
-      : WEDDING_TEMPLATES.filter((t) => t.style === selectedStyle);
+  const goToBuilder = () => onNavigate('builder');
+  const serviceHighlights = WEDDING_SERVICES.filter((service) => service.featured).slice(0, 3);
 
-  const features = [
-    {
-      icon: <Smartphone className="w-6 h-6 text-rose-500" />,
-      titleVi: 'Chuẩn hoá cho điện thoại',
-      descVi: 'Thiết kế chuẩn tỉ lệ màn hình smartphone, mở mượt mà trên Zalo, Facebook, Messenger và trình duyệt.',
-    },
-    {
-      icon: <Users className="w-6 h-6 text-amber-500" />,
-      titleVi: 'Xác nhận tham dự (RSVP)',
-      descVi: 'Khách mời xác nhận đi 1 mình hay cùng người thân, ghi chú món ăn giúp bạn đặt bàn tiệc chuẩn xác 100%.',
-    },
-    {
-      icon: <QrCode className="w-6 h-6 text-emerald-500" />,
-      titleVi: 'Hộp mừng cưới VietQR',
-      descVi: 'Tự động tạo mã QR quét qua mọi app ngân hàng. Khách ở xa gửi quà mừng dễ dàng chỉ trong vài giây.',
-    },
-    {
-      icon: <Heart className="w-6 h-6 text-pink-500" />,
-      titleVi: 'Sổ lưu bút & Thả tim chúc phúc',
-      descVi: 'Không gian ấm áp để gia đình, bạn bè viết những dòng tâm sự, gửi lời chúc phúc lưu giữ trọn đời.',
-    },
-    {
-      icon: <MapPin className="w-6 h-6 text-indigo-500" />,
-      titleVi: 'Chỉ đường Google Maps 1 chạm',
-      descVi: 'Tích hợp bản đồ chính xác tới từng sảnh cưới, kèm tính năng lưu sự kiện vào lịch Google/iCloud.',
-    },
-    {
-      icon: <Music className="w-6 h-6 text-purple-500" />,
-      titleVi: 'Nhạc nền tình yêu lãng mạn',
-      descVi: 'Giai điệu piano ngọt ngào mở ra cảm xúc hân hoan khi khách chạm tay mở bức thiệp hồng.',
-    },
-  ];
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setActiveTemplateIndex((current) => (current + 1) % featuredTemplates.length);
+    }, 6500);
 
-  const pricingPlans = [
-    {
-      nameVi: 'Gói Trải Nghiệm',
-      nameEn: 'Free Starter',
-      price: '0đ',
-      badge: 'Miễn phí',
-      highlight: false,
-      featuresVi: [
-        'Chọn 3 mẫu thiệp cơ bản',
-        'Website hiển thị 30 ngày',
-        'Album cưới tối đa 5 ảnh',
-        'Bản đồ chỉ đường Google Maps',
-        'Sổ lưu bút cơ bản',
-      ],
-      ctaVi: 'Dùng Miễn Phí',
-    },
-    {
-      nameVi: 'Gói Hạnh Phúc',
-      nameEn: 'Happiness Pro',
-      price: '199.000đ',
-      badge: 'Phổ biến nhất',
-      highlight: true,
-      featuresVi: [
-        'Mở khoá toàn bộ 400+ mẫu thiệp cao cấp',
-        'Thời gian lưu trữ 1 năm',
-        'Album ảnh HD không giới hạn & video',
-        'Quản lý khách mời RSVP chi tiết',
-        'Hộp mừng cưới VietQR động',
-        'Tùy chỉnh link theo tên khách riêng',
-        'Nhạc nền tùy chọn & hiệu ứng hoa bay',
-      ],
-      ctaVi: 'Chọn Gói Hạnh Phúc',
-    },
-    {
-      nameVi: 'Gói Chung Đôi Vĩnh Cửu',
-      nameEn: 'Forever VIP',
-      price: '399.000đ',
-      badge: 'Trọn đời',
-      highlight: false,
-      featuresVi: [
-        'Lưu trữ vĩnh viễn website kỷ niệm ngày cưới',
-        'Tên miền riêng theo tên cặp đôi (tùy chọn)',
-        'Tất cả tính năng cao cấp nhất',
-        'Xuất file danh sách khách mời Excel',
-        'Tạo thiệp tĩnh in ấn chất lượng cao',
-        'Hỗ trợ thiết kế & chỉnh sửa 1-1',
-      ],
-      ctaVi: 'Chọn Gói VIP',
-    },
-  ];
+    return () => window.clearInterval(timer);
+  }, [featuredTemplates.length]);
 
-  const faqs = [
-    {
-      qVi: 'Tôi có thể chia sẻ thiệp qua Zalo và Messenger như thế nào?',
-      aVi: 'Sau khi tạo thiệp xong, bạn chỉ cần bấm nút "Sao chép link" hoặc "Chia sẻ Zalo". Link thiệp khi gửi sẽ hiện đầy đủ hình đại diện ảnh cưới, tên cô dâu chú rể và lời mời trang trọng như một tấm thiệp kỹ thuật số chuyên nghiệp.',
-    },
-    {
-      qVi: 'Người nhận thiệp có cần cài đặt ứng dụng gì để mở không?',
-      aVi: 'Hoàn toàn không! Bất kỳ ai nhận được đường link đều có thể mở trực tiếp trên điện thoại (iPhone, Samsung, Xiaomi...) hoặc máy tính bằng bất kỳ trình duyệt web nào, giao diện mượt mà và tự động co giãn đẹp mắt.',
-    },
-    {
-      qVi: 'Tính năng hộp mừng cưới VietQR hoạt động ra sao?',
-      aVi: 'Bạn chỉ cần nhập số tài khoản ngân hàng và tên ngân hàng của cô dâu hoặc chú rể trong phần chỉnh sửa. Hệ thống Chung Đôi sẽ tự sinh mã QR chuẩn Napas/VietQR. Khách chỉ cần quét mã bằng ứng dụng ngân hàng là tiền về thẳng tài khoản của bạn, không qua trung gian, 100% an toàn.',
-    },
-    {
-      qVi: 'Tôi có thể tạo thiệp có ghi rõ tên từng vị khách không?',
-      aVi: 'Có! Tính năng thiệp cá nhân hoá của Chung Đôi cho phép bạn nhập danh sách tên khách (ví dụ: "Kính gửi: Anh Hoàng & Bạn gái", "Kính mời: Bác Ba"). Hệ thống sẽ tự tạo link riêng mang tên vị khách đó trên bì thư rất trang trọng.',
-    },
-  ];
+  const getTemplateImage = (template: WeddingTemplate, index: number) =>
+    index < referenceTemplateImages.length ? referenceTemplateImages[index] : template.coverImage;
+
+  const getCarouselOffset = (index: number) => {
+    const rawOffset = (index - activeTemplateIndex + featuredTemplates.length) % featuredTemplates.length;
+    return rawOffset > featuredTemplates.length / 2 ? rawOffset - featuredTemplates.length : rawOffset;
+  };
 
   return (
-    <div className="bg-[#FAF8F5]">
-      {/* 1. HERO SECTION */}
-      <section className="relative overflow-hidden pt-8 pb-16 lg:pt-16 lg:pb-24">
-        {/* Background decorative blurs */}
-        <div className="absolute top-10 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-linear-to-r from-rose-100/60 via-amber-50/40 to-pink-100/50 blur-3xl -z-10 rounded-full" />
-
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left Content */}
-            <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              {/* Trust Badge */}
-              <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-rose-50 border border-rose-200/80 text-rose-700 text-xs sm:text-sm font-medium">
-                <Sparkles className="w-4 h-4 text-rose-500 shrink-0" />
-                <span>Nền tảng thiệp cưới &amp; website đám cưới thông minh #1</span>
-              </div>
-
-              {/* Headline */}
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-stone-900 leading-tight">
-                Tạo Website Đám Cưới &amp; Thiệp Cưới Online{' '}
-                <span className="text-transparent bg-clip-text bg-linear-to-r from-rose-600 via-rose-500 to-amber-600 font-display">
-                  Tinh Tế Trong 3 Phút
-                </span>
-              </h1>
-
-              {/* Subhead */}
-              <p className="text-base sm:text-lg text-stone-600 max-w-2xl mx-auto lg:mx-0 leading-relaxed font-body">
-                Thay thế thiệp giấy truyền thống bằng trải nghiệm đa phương tiện sống động: hình ảnh HD,
-                nhạc nền du dương, xác nhận tham dự RSVP thông minh và hộp mừng cưới VietQR tiện lợi.
-              </p>
-
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
-                <button
-                  id="hero-create-cta"
-                  onClick={() => onNavigate('builder')}
-                  className="w-full sm:w-auto px-8 py-4 rounded-full bg-linear-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white font-semibold text-base shadow-lg shadow-rose-200 hover:shadow-xl transition-all duration-200 flex items-center justify-center space-x-2 active:scale-98"
-                >
-                  <Sparkles className="w-5 h-5" />
-                  <span>Tạo thiệp cưới miễn phí ngay</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-
-                <button
-                  id="hero-preview-cta"
-                  onClick={() => onNavigate('invitation')}
-                  className="w-full sm:w-auto px-6 py-4 rounded-full bg-white hover:bg-stone-50 text-stone-800 font-medium text-base border border-stone-300 shadow-xs hover:border-stone-400 transition-colors flex items-center justify-center space-x-2"
-                >
-                  <Play className="w-4 h-4 text-rose-500 fill-rose-500" />
-                  <span>Xem thiệp mẫu thực tế</span>
-                </button>
-              </div>
-
-              {/* Value proof bullets */}
-              <div className="pt-4 flex flex-wrap items-center justify-center lg:justify-start gap-y-2 gap-x-6 text-xs sm:text-sm text-stone-500 font-medium">
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span>Miễn phí khởi tạo</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span>Gửi Zalo không giới hạn</span>
-                </div>
-                <div className="flex items-center space-x-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                  <span>Hỗ trợ VietQR mọi ngân hàng</span>
-                </div>
-              </div>
+    <div className="overflow-hidden bg-[#fbf9f7] text-[#3d302d]">
+      <section className="relative bg-[#f1eeee]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(255,255,255,.9),transparent_35%),radial-gradient(circle_at_80%_10%,rgba(255,220,230,.65),transparent_35%)]" />
+        <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-5 pb-16 pt-16 sm:px-8 lg:grid-cols-[.9fr_1.1fr] lg:gap-16 lg:px-12 lg:pb-24 lg:pt-24">
+          <div className="max-w-xl">
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-[#e7cbd0] bg-white/70 px-4 py-2 text-xs font-semibold text-[#b00045]">
+              <Sparkles className="h-4 w-4" />
+              Thiệp cưới online hiện đại
             </div>
-
-            {/* Right Interactive Phone Preview Mockup */}
-            <div className="lg:col-span-5 flex justify-center">
-              <div className="relative w-full max-w-xs sm:max-w-sm">
-                {/* Outer Phone Shell */}
-                <div className="relative bg-stone-900 rounded-[44px] p-3 shadow-2xl ring-1 ring-stone-900/10 shadow-rose-900/10">
-                  {/* Dynamic Island / Notch */}
-                  <div className="absolute top-6 left-1/2 -translate-x-1/2 w-24 h-4 bg-stone-900 rounded-full z-20 flex items-center justify-center">
-                    <div className="w-2.5 h-2.5 rounded-full bg-stone-800" />
-                  </div>
-
-                  {/* Inner Screen Preview */}
-                  <div className="relative bg-[#FAF5F0] rounded-[36px] overflow-hidden border border-amber-900/10 h-[560px] flex flex-col">
-                    {/* Header Image with Couple */}
-                    <div className="relative h-64 overflow-hidden">
-                      <img
-                        src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=600&q=80"
-                        alt="Minh Triết & Thảo Vy"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-linear-to-t from-stone-950/80 via-stone-950/20 to-transparent flex flex-col justify-end p-4 text-white text-center">
-                        <span className="text-[11px] uppercase tracking-widest text-amber-200 font-semibold">
-                          We Are Getting Married
-                        </span>
-                        <h3 className="text-2xl font-script text-white mt-1">
-                          Minh Triết &amp; Thảo Vy
-                        </h3>
-                        <p className="text-xs text-stone-200 mt-0.5">28 . 11 . 2026</p>
-                      </div>
-
-                      {/* Floating Music Pill */}
-                      <div className="absolute top-4 right-4 bg-black/40 backdrop-blur-md rounded-full px-2.5 py-1 flex items-center space-x-1.5 text-[10px] text-white">
-                        <span className="w-1.5 h-1.5 rounded-full bg-rose-400 animate-ping" />
-                        <span>Nhạc cưới</span>
-                      </div>
-                    </div>
-
-                    {/* Invitation Card Body */}
-                    <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
-                      {/* Countdown badge */}
-                      <div className="bg-white/80 rounded-2xl p-2.5 border border-rose-100 text-center shadow-xs">
-                        <p className="text-[10px] uppercase font-bold text-rose-500 tracking-wider">
-                          Đếm ngược ngày cưới
-                        </p>
-                        <div className="grid grid-cols-4 gap-1 mt-1 text-stone-800">
-                          <div className="bg-rose-50/70 py-1 rounded">
-                            <span className="text-sm font-bold block">76</span>
-                            <span className="text-[9px] text-stone-500">Ngày</span>
-                          </div>
-                          <div className="bg-rose-50/70 py-1 rounded">
-                            <span className="text-sm font-bold block">14</span>
-                            <span className="text-[9px] text-stone-500">Giờ</span>
-                          </div>
-                          <div className="bg-rose-50/70 py-1 rounded">
-                            <span className="text-sm font-bold block">28</span>
-                            <span className="text-[9px] text-stone-500">Phút</span>
-                          </div>
-                          <div className="bg-rose-50/70 py-1 rounded">
-                            <span className="text-sm font-bold block">45</span>
-                            <span className="text-[9px] text-stone-500">Giây</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      {/* Venue preview mini */}
-                      <div className="bg-white rounded-xl p-2.5 border border-stone-200/70 text-xs space-y-1">
-                        <div className="flex items-center text-rose-600 font-semibold">
-                          <MapPin className="w-3.5 h-3.5 mr-1 shrink-0" />
-                          <span className="truncate">White Palace Luxury Hall</span>
-                        </div>
-                        <p className="text-stone-500 text-[11px] truncate">
-                          194 Hoàng Văn Thụ, Phú Nhuận, TP. HCM
-                        </p>
-                      </div>
-
-                      {/* Interactive Button */}
-                      <button
-                        onClick={() => onNavigate('invitation')}
-                        className="w-full py-2.5 rounded-xl bg-linear-to-r from-rose-500 to-rose-600 text-white text-xs font-semibold shadow-sm hover:brightness-105 transition-all flex items-center justify-center space-x-1.5"
-                      >
-                        <ExternalLink className="w-3.5 h-3.5" />
-                        <span>Mở toàn bộ thiệp mời điện tử</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Floating Testimonial Tag */}
-                <div className="absolute -bottom-6 -left-6 bg-white/95 backdrop-blur-md rounded-2xl p-3.5 shadow-xl border border-stone-100 flex items-center space-x-3 hidden sm:flex">
-                  <div className="w-10 h-10 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600 font-bold text-sm">
-                    <QrCode className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <div className="flex items-center space-x-1">
-                      <span className="text-xs font-bold text-stone-800">VietQR Tự Động</span>
-                      <span className="text-[10px] bg-emerald-100 text-emerald-700 px-1.5 py-0.2 rounded font-semibold">
-                        Napas 247
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-stone-500">Mừng cưới chuẩn xác &amp; bảo mật</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 2. STATS SECTION */}
-      <section className="bg-white border-y border-stone-200/80 py-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-rose-600 font-display">
-                85,000+
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 font-medium mt-1">
-                Cặp đôi đã tin dùng
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-stone-900 font-display">
-                420+
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 font-medium mt-1">
-                Mẫu thiệp đa phong cách
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-stone-900 font-display">
-                1,500,000+
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 font-medium mt-1">
-                Lời chúc phúc được gửi
-              </p>
-            </div>
-            <div>
-              <div className="text-2xl sm:text-3xl font-extrabold text-amber-600 font-display">
-                99.8%
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 font-medium mt-1">
-                Đánh giá hài lòng 5 sao
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 3. TEMPLATE SHOWCASE */}
-      <section id="templates-section" className="py-16 sm:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-10">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Kho Thiết Kế Độc Quyền
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mt-3 font-display">
-              Mẫu Thiệp Cưới &amp; Website Xu Hướng 2026
-            </h2>
-            <p className="text-stone-600 mt-2 text-sm sm:text-base">
-              Được thiết kế tinh xảo bởi các chuyên gia mỹ thuật cưới. Dễ dàng đổi ảnh, nội dung và màu
-              sắc theo phong cách riêng của bạn chỉ trong một nốt nhạc.
+            <h1 className="font-display text-5xl font-semibold leading-[1.05] tracking-[-.03em] text-[#302526] sm:text-6xl lg:text-[76px]">
+              Gửi lời yêu thương
+              <span className="block font-script font-normal text-[#ec0068]">đến mọi người</span>
+            </h1>
+            <p className="mt-7 max-w-lg text-base leading-8 text-[#6c5e5e] sm:text-lg">
+              Một tấm thiệp đẹp thay bạn kể câu chuyện tình yêu. Tạo thiệp cưới online miễn phí,
+              gửi nhanh hơn, xa hơn và vẫn trọn vẹn sự chân thành.
             </p>
-
-            {/* Filter buttons */}
-            <div className="flex flex-wrap justify-center gap-2 mt-6">
-              {filterStyles.map((style) => (
-                <button
-                  key={style.id}
-                  onClick={() => setSelectedStyle(style.id)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-medium transition-all ${
-                    selectedStyle === style.id
-                      ? 'bg-rose-500 text-white shadow-xs'
-                      : 'bg-white text-stone-600 border border-stone-200 hover:border-rose-200'
-                  }`}
-                >
-                  {style.label}
-                </button>
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row">
+              <button
+                onClick={goToBuilder}
+                className="group inline-flex items-center justify-center gap-3 rounded-full bg-[#ed0068] px-7 py-4 text-sm font-bold text-white shadow-xl shadow-[#ed0068]/20 transition hover:-translate-y-0.5 hover:bg-[#ca0059]"
+              >
+                Tạo thiệp miễn phí
+                <ArrowRight className="h-4 w-4 transition group-hover:translate-x-1" />
+              </button>
+              <button
+                onClick={() => onNavigate('templates')}
+                className="inline-flex items-center justify-center gap-2 rounded-full border border-[#d6c9c7] bg-white/70 px-7 py-4 text-sm font-semibold text-[#4c3b3b] transition hover:bg-white"
+              >
+                <Play className="h-4 w-4 fill-current text-[#ed0068]" />
+                Xem mẫu thiệp
+              </button>
+            </div>
+            <div className="mt-7 flex flex-wrap gap-x-6 gap-y-2 text-xs text-[#806f6f]">
+              {['Không cần thẻ', 'Thử 3 ngày', 'Đẹp mới thanh toán'].map((item) => (
+                <span key={item} className="inline-flex items-center gap-1.5">
+                  <Check className="h-3.5 w-3.5 text-[#ed0068]" /> {item}
+                </span>
               ))}
             </div>
           </div>
 
-          {/* Template Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredTemplates.map((template) => (
-              <div
-                key={template.id}
-                className="group bg-white rounded-2xl overflow-hidden border border-stone-200/90 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col"
-              >
-                {/* Thumbnail */}
-                <div className="relative h-72 overflow-hidden bg-stone-100">
-                  <img
-                    src={template.coverImage}
-                    alt={template.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-stone-950/20 group-hover:bg-stone-950/40 transition-colors" />
-
-                  {/* Badge */}
-                  {template.badge && (
-                    <span className="absolute top-3 left-3 px-2.5 py-1 bg-white/90 backdrop-blur-xs rounded-full text-[11px] font-bold text-rose-600 shadow-xs">
-                      {template.badge}
-                    </span>
-                  )}
-
-                  {/* Style Tag */}
-                  <span className="absolute bottom-3 left-3 px-2.5 py-1 bg-black/60 backdrop-blur-xs rounded-lg text-[11px] text-white font-medium">
-                    {template.styleLabel}
-                  </span>
-
-                  {/* Quick Action Overlay Button */}
-                  <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity gap-3">
-                    <button
-                      onClick={() => onNavigate('invitation')}
-                      className="px-4 py-2 rounded-full bg-white text-stone-900 text-xs font-semibold shadow-md hover:bg-stone-100 transition-colors flex items-center space-x-1"
-                    >
-                      <Play className="w-3.5 h-3.5 text-rose-500 fill-rose-500" />
-                      <span>Xem thử</span>
-                    </button>
-                    <button
-                      onClick={() => {
-                        onSelectTemplate(template);
-                        onNavigate('builder');
-                      }}
-                      className="px-4 py-2 rounded-full bg-rose-500 text-white text-xs font-semibold shadow-md hover:bg-rose-600 transition-colors flex items-center space-x-1"
-                    >
-                      <Palette className="w-3.5 h-3.5" />
-                      <span>Dùng mẫu này</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Details */}
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                      {template.name}
-                    </h3>
-                    <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                      {template.tagline}
-                    </p>
-                  </div>
-
-                  <div className="pt-4 mt-4 border-t border-stone-100 flex items-center justify-between">
-                    <div className="flex items-center space-x-1.5">
-                      <span
-                        className="w-3.5 h-3.5 rounded-full border border-stone-200"
-                        style={{ backgroundColor: template.themeColor }}
-                      />
-                      <span className="text-xs text-stone-500 font-medium">Tone màu chủ đạo</span>
-                    </div>
-
-                    <button
-                      onClick={() => {
-                        onSelectTemplate(template);
-                        onNavigate('builder');
-                      }}
-                      className="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center space-x-1"
-                    >
-                      <span>Bắt đầu sửa</span>
-                      <ChevronRight className="w-4 h-4" />
-                    </button>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div className="text-center mt-12">
-            <button
-              onClick={() => onNavigate('builder')}
-              className="px-8 py-3.5 rounded-full bg-white border border-stone-300 text-stone-800 text-sm font-semibold hover:border-stone-400 shadow-xs hover:bg-stone-50 transition-colors"
-            >
-              Khám phá thêm mẫu thiệp và bắt đầu tạo &rarr;
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 4. CORE FEATURES SECTION */}
-      <section className="bg-stone-100/70 py-16 sm:py-24 border-y border-stone-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Tính Năng Đột Phá
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mt-3 font-display">
-              Mọi Thứ Cần Cho Một Đám Cưới Thời Đại Số
-            </h2>
-            <p className="text-stone-600 mt-2 text-sm sm:text-base">
-              Chung Đôi kết hợp hoàn hảo giữa nét văn hóa cưới truyền thống Việt Nam và tiện ích công
-              nghệ hiện đại nhất.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {features.map((item, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-2xl p-6 border border-stone-200/80 shadow-xs hover:shadow-md transition-shadow"
-              >
-                <div className="w-12 h-12 rounded-xl bg-stone-50 border border-stone-100 flex items-center justify-center mb-4">
-                  {item.icon}
-                </div>
-                <h3 className="text-lg font-bold text-stone-900 mb-2">{item.titleVi}</h3>
-                <p className="text-sm text-stone-600 leading-relaxed font-body">{item.descVi}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 5. 3 EASY STEPS */}
-      <section className="py-16 sm:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Quy Trình Nhanh Gọn
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mt-3 font-display">
-              Chỉ 3 Bước Cho Ngày Chung Đôi
-            </h2>
-            <p className="text-stone-600 mt-2 text-sm sm:text-base">
-              Không cần biết lập trình hay đồ họa phức tạp, ai cũng có thể tự tay tạo thiệp cưới trong mơ.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative">
-            <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200/80 text-center relative">
-              <div className="w-12 h-12 rounded-full bg-rose-500 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4 shadow-sm shadow-rose-200">
-                1
-              </div>
-              <h3 className="text-lg font-bold text-stone-900 mb-2">Chọn Mẫu Thiết Kế</h3>
-              <p className="text-sm text-stone-600">
-                Duyệt qua bộ sưu tập phong phú từ phong cách lãng mạn, thanh lịch đến hiện đại hoặc cổ điển.
-              </p>
+          <div className="relative min-h-[430px] sm:min-h-[560px]">
+            <div className="absolute left-1/2 top-1/2 h-[330px] w-[270px] -translate-x-1/2 -translate-y-1/2 rotate-[-4deg] rounded-[30px] bg-white p-3 shadow-2xl shadow-[#8f5365]/20 sm:h-[480px] sm:w-[350px]">
+              <img
+                src={referenceTemplateImages[0]}
+                alt="Mẫu thiệp cưới Song Hỷ"
+                className="h-full w-full rounded-[22px] object-cover"
+              />
             </div>
-
-            <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200/80 text-center relative">
-              <div className="w-12 h-12 rounded-full bg-rose-500 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4 shadow-sm shadow-rose-200">
-                2
-              </div>
-              <h3 className="text-lg font-bold text-stone-900 mb-2">Điền Thông Tin &amp; Ảnh</h3>
-              <p className="text-sm text-stone-600">
-                Nhập tên cô dâu chú rể, ngày giờ cưới, câu chuyện tình yêu, tải album ảnh cưới và cấu hình VietQR.
-              </p>
+            <div className="absolute left-[5%] top-[20%] hidden h-[300px] w-[155px] rotate-[-16deg] overflow-hidden rounded-2xl bg-white p-2 shadow-xl sm:block">
+              <img src={referenceTemplateImages[1]} alt="" className="h-full w-full rounded-xl object-cover" />
             </div>
-
-            <div className="bg-[#FAF8F5] rounded-2xl p-6 border border-stone-200/80 text-center relative">
-              <div className="w-12 h-12 rounded-full bg-rose-500 text-white font-bold text-lg flex items-center justify-center mx-auto mb-4 shadow-sm shadow-rose-200">
-                3
-              </div>
-              <h3 className="text-lg font-bold text-stone-900 mb-2">Gửi Thiệp &amp; Đón Chúc Phúc</h3>
-              <p className="text-sm text-stone-600">
-                Nhận đường link trực quan và chia sẻ qua Zalo, Facebook; theo dõi phản hồi tham dự theo thời gian thực.
-              </p>
+            <div className="absolute right-[3%] top-[15%] hidden h-[330px] w-[165px] rotate-[14deg] overflow-hidden rounded-2xl bg-white p-2 shadow-xl sm:block">
+              <img src={referenceTemplateImages[2]} alt="" className="h-full w-full rounded-xl object-cover" />
             </div>
-          </div>
-
-          <div className="mt-12 text-center">
-            <button
-              onClick={() => onNavigate('builder')}
-              className="px-8 py-3.5 rounded-full bg-rose-500 hover:bg-rose-600 text-white font-semibold text-sm shadow-sm transition-all"
-            >
-              Thử nghiệm trình tạo thiệp ngay bây giờ
-            </button>
-          </div>
-        </div>
-      </section>
-
-      {/* 5.5 WEDDING TOOLS SUITE (HỆ SINH THÁI TIỆN ÍCH CƯỚI CHUNG ĐÔI) */}
-      <section className="py-16 sm:py-24 bg-[#FAF8F5] border-t border-stone-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-14">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Hệ Sinh Thái Tiện Ích Đám Cưới
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mt-3 font-display">
-              Trọn Bộ Công Cụ Hỗ Trợ Chuẩn Bị Đám Cưới
-            </h2>
-            <p className="text-stone-600 mt-2 text-sm sm:text-base">
-              Không chỉ là thiệp cưới, Chung Đôi cung cấp bộ giải pháp thông minh giúp đôi bạn chuẩn bị
-              hôn lễ trọn vẹn từ tính toán chi phí, soạn lời mời Zalo đến sắp xếp bàn tiệc.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            <div
-              onClick={() => onNavigate('budget-calc')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Calculator className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Dự Trù Chi Phí Cưới
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Lập dự toán theo từng hạng mục: tiệc cưới, nhẫn cưới, ảnh cưới, trang phục; theo dõi số tiền đã cọc và còn lại.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Dùng thử miễn phí</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('wedding-plan')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <CheckSquare className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Kế Hoạch &amp; Checklist 12 Tuần
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Danh sách việc cần làm chi tiết theo từng giai đoạn: 6 tháng trước, 3 tháng, 1 tháng và ngày cưới chính thức.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Xem checklist</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('invitation-messages')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <MessageSquare className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Tin Nhắn Mời Cưới Zalo &amp; SMS
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Mẫu tin nhắn chuẩn lịch sự và tinh tế cho từng đối tượng: bạn thân, bạn học, đồng nghiệp, cấp trên, họ hàng xa.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Sao chép mẫu</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('speeches')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Mic className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Bài Phát Biểu Đám Cưới
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Lời phát biểu chuẩn lễ nghi cho họ nhà trai, họ nhà gái tại lễ thành hôn, lễ ăn hỏi và lời cảm ơn của cô dâu chú rể.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Đọc bài phát biểu</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('save-the-date')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <CalendarDays className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Tạo Ảnh Báo Hỷ (Save The Date)
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Thiết kế ảnh báo hỷ sắc nét 4:5 chỉ trong 1 phút để đăng Story Facebook, Zalo, Instagram nhắc hẹn bạn bè.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Tạo ảnh ngay</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('compress-image')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <ImageIcon className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Nén Dung Lượng Ảnh Cưới
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Giảm 80-90% dung lượng ảnh máy cơ (từ 10MB còn 200KB) vẫn sắc nét để gửi bạn bè và tải lên web nhanh tức thì.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Nén ảnh miễn phí</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('seating-chart')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Grid className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Sơ Đồ Xếp Bàn Tiệc (Seating Chart)
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Phân chia bàn tiệc nhà trai, nhà gái, bàn bạn bè, bàn VIP dễ dàng để tiếp đón chu đáo, không bị thiếu chỗ.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Xếp bàn tiệc</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
-            </div>
-
-            <div
-              onClick={() => onNavigate('lunar-converter')}
-              className="bg-white rounded-3xl p-6 border border-stone-200/80 shadow-xs hover:shadow-xl hover:border-rose-300 transition-all cursor-pointer group flex flex-col justify-between"
-            >
-              <div>
-                <div className="w-12 h-12 rounded-2xl bg-orange-50 text-orange-600 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                  <Clock className="w-6 h-6" />
-                </div>
-                <h3 className="text-base font-bold text-stone-900 group-hover:text-rose-600 transition-colors">
-                  Đổi Lịch Âm - Dương Cưới Hỏi
-                </h3>
-                <p className="text-xs text-stone-500 mt-1 leading-relaxed">
-                  Tra cứu ngày hoàng đạo, giờ tốt rước dâu và thông tin Can Chi chính xác để in lên thiệp cưới trang trọng.
-                </p>
-              </div>
-              <div className="pt-4 mt-4 border-t border-stone-100 flex items-center text-xs font-bold text-rose-600">
-                <span>Tra cứu ngày lành</span>
-                <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
-              </div>
+            <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold text-[#9b8383] shadow-lg backdrop-blur">
+              <span className="h-2 w-2 rounded-full bg-[#ed0068]" />
+              400+ mẫu thiệp được yêu thích
             </div>
           </div>
         </div>
       </section>
 
-      {/* 5.6 BLOG & WEDDING GUIDES PREVIEW */}
-      <section className="py-16 sm:py-20 bg-white border-t border-stone-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-center justify-between mb-10 gap-4">
-            <div>
-              <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-                Cẩm Nang Cưới Hỏi
-              </span>
-              <h2 className="text-2xl sm:text-3xl font-bold font-display text-stone-900 mt-2">
-                Bí Quyết &amp; Kinh Nghiệm Cưới Mới Nhất
-              </h2>
+      <section className="border-b border-[#eee2df] bg-white">
+        <div className="mx-auto grid max-w-7xl grid-cols-2 divide-x divide-[#eee2df] px-5 py-7 text-center sm:grid-cols-4 sm:px-8 lg:px-12">
+          {[
+            ['85.000+', 'cặp đôi đã tin dùng'],
+            ['400+', 'mẫu thiệp tinh tế'],
+            ['24/7', 'luôn sẵn sàng hỗ trợ'],
+            ['3 phút', 'để tạo thiệp đầu tiên'],
+          ].map(([value, label]) => (
+            <div key={label} className="px-3 py-2">
+              <div className="font-display text-2xl font-semibold text-[#3d302d] sm:text-3xl">{value}</div>
+              <div className="mt-1 text-[11px] uppercase tracking-[.12em] text-[#9d8986]">{label}</div>
             </div>
-            <button
-              onClick={() => onNavigate('blog')}
-              className="flex items-center space-x-1 px-4 py-2 rounded-xl text-rose-600 bg-rose-50 hover:bg-rose-100 text-xs font-bold transition-colors"
-            >
-              <span>Xem tất cả bài viết</span>
-              <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {BLOG_POSTS.slice(0, 3).map((post) => (
-              <div
-                key={post.id}
-                onClick={() => onNavigate('blog')}
-                className="bg-[#FAF8F5] rounded-3xl overflow-hidden border border-stone-200/80 hover:shadow-xl transition-all cursor-pointer group flex flex-col justify-between"
-              >
-                <div className="relative h-48 overflow-hidden bg-stone-200">
-                  <img
-                    src={post.coverImage}
-                    alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <span className="absolute top-3 left-3 bg-white/95 text-rose-600 text-[10px] font-bold px-2.5 py-1 rounded-full shadow-xs">
-                    {post.category}
-                  </span>
-                </div>
-                <div className="p-5 flex-1 flex flex-col justify-between">
-                  <div>
-                    <span className="text-[11px] text-stone-400 block mb-1">
-                      {post.date} &bull; {post.readTime}
-                    </span>
-                    <h4 className="text-sm font-bold text-stone-900 group-hover:text-rose-600 transition-colors line-clamp-2">
-                      {post.title}
-                    </h4>
-                    <p className="text-xs text-stone-500 mt-1 line-clamp-2">{post.summary}</p>
-                  </div>
-                  <div className="pt-3 mt-3 border-t border-stone-200/60 text-xs font-bold text-rose-600 flex items-center justify-between">
-                    <span>Đọc bài viết</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* 6. PRICING SECTION */}
-      <section className="bg-stone-100/60 py-16 sm:py-24 border-y border-stone-200/80">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Bảng Giá Tiết Kiệm
-            </span>
-            <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mt-3 font-display">
-              Chi Phí Nhỏ Cho Hạnh Phúc To
-            </h2>
-            <p className="text-stone-600 mt-2 text-sm sm:text-base">
-              Tiết kiệm hàng triệu đồng so với in thiệp truyền thống. Không giới hạn số lượng khách mời nhận thiệp.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-            {pricingPlans.map((plan, idx) => (
-              <div
-                key={idx}
-                className={`rounded-3xl p-8 flex flex-col justify-between transition-all ${
-                  plan.highlight
-                    ? 'bg-white border-2 border-rose-500 shadow-xl shadow-rose-100 relative'
-                    : 'bg-white border border-stone-200/80 shadow-xs'
-                }`}
-              >
-                {plan.highlight && (
-                  <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-rose-500 text-white text-[11px] font-bold uppercase tracking-wider px-3.5 py-1 rounded-full shadow-xs">
-                    {plan.badge}
-                  </span>
-                )}
-
-                <div>
-                  <div className="flex justify-between items-baseline mb-4">
-                    <h3 className="text-xl font-bold text-stone-900">{plan.nameVi}</h3>
-                    {!plan.highlight && (
-                      <span className="text-xs text-stone-500 font-medium">{plan.badge}</span>
-                    )}
-                  </div>
-
-                  <div className="mb-6">
-                    <span className="text-3xl sm:text-4xl font-extrabold text-stone-900 font-display">
-                      {plan.price}
-                    </span>
-                    <span className="text-xs text-stone-500 ml-1">/ đám cưới</span>
-                  </div>
-
-                  <ul className="space-y-3 mb-8">
-                    {plan.featuresVi.map((f, fIdx) => (
-                      <li key={fIdx} className="flex items-start text-xs sm:text-sm text-stone-600">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0 mr-2 mt-0.5" />
-                        <span>{f}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <button
-                  onClick={() => onNavigate('builder')}
-                  className={`w-full py-3 rounded-full text-sm font-semibold transition-all ${
-                    plan.highlight
-                      ? 'bg-rose-500 hover:bg-rose-600 text-white shadow-sm'
-                      : 'bg-stone-100 hover:bg-stone-200 text-stone-800'
-                  }`}
-                >
-                  {plan.ctaVi}
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 7. REAL COUPLE STORIES & TESTIMONIALS */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-              Chia Sẻ Hạnh Phúc
-            </span>
-            <h2 className="text-3xl font-bold text-stone-900 mt-3 font-display">
-              Cảm Nhận Từ Các Cặp Đôi
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[#FAF8F5] border border-stone-200/80">
-              <div className="flex items-center space-x-1 text-amber-400 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 italic leading-relaxed">
-                "Thiệp gửi qua Zalo trông xịn xò bất ngờ! Bạn bè ai cũng khen nức nở tính năng xác nhận đi
-                mấy người và mã QR mừng cưới. Tiết kiệm cho tụi mình hơn 4 triệu tiền in thiệp giấy."
-              </p>
-              <div className="mt-4 pt-4 border-t border-stone-200 flex items-center space-x-3">
-                <img
-                  src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=100&q=80"
-                  alt="Thanh Hằng & Quốc Đạt"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-stone-900">Thanh Hằng &amp; Quốc Đạt</h4>
-                  <p className="text-[11px] text-stone-500">Đám cưới tại Gem Center, TP. HCM</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#FAF8F5] border border-stone-200/80">
-              <div className="flex items-center space-x-1 text-amber-400 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 italic leading-relaxed">
-                "Bố mẹ hai bên lúc đầu cứ lo người lớn tuổi không biết xem, nhưng giao diện của Chung Đôi quá
-                rõ ràng, bấm vào là hiện bản đồ chỉ đường và thời gian cưới to rõ, người lớn khen tấm tắc!"
-              </p>
-              <div className="mt-4 pt-4 border-t border-stone-200 flex items-center space-x-3">
-                <img
-                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80"
-                  alt="Văn Lâm & Bích Ngọc"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-stone-900">Văn Lâm &amp; Bích Ngọc</h4>
-                  <p className="text-[11px] text-stone-500">Đám cưới tại Hà Nội</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="p-6 rounded-2xl bg-[#FAF8F5] border border-stone-200/80">
-              <div className="flex items-center space-x-1 text-amber-400 mb-3">
-                {[...Array(5)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-amber-400" />
-                ))}
-              </div>
-              <p className="text-xs sm:text-sm text-stone-600 italic leading-relaxed">
-                "Thích nhất là mục Sổ lưu bút online. Đêm tân hôn hai vợ chồng ngồi đọc lại từng lời chúc
-                xúc động muốn khóc. Đây là kỷ niệm vô giá mà thiệp giấy không thể nào có được."
-              </p>
-              <div className="mt-4 pt-4 border-t border-stone-200 flex items-center space-x-3">
-                <img
-                  src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=100&q=80"
-                  alt="Minh Khang & Thu Hà"
-                  className="w-10 h-10 rounded-full object-cover"
-                />
-                <div>
-                  <h4 className="text-xs font-bold text-stone-900">Minh Khang &amp; Thu Hà</h4>
-                  <p className="text-[11px] text-stone-500">Đám cưới tại Đà Nẵng</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 8. FAQ SECTION */}
-      <section className="py-16 sm:py-20 bg-stone-50 border-t border-stone-200">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6">
-          <div className="text-center mb-10">
-            <h2 className="text-2xl sm:text-3xl font-bold text-stone-900 font-display">
-              Câu Hỏi Thường Gặp
-            </h2>
-            <p className="text-stone-500 text-sm mt-1">Giải đáp mọi thắc mắc về thiệp cưới online Chung Đôi</p>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, idx) => (
-              <div
-                key={idx}
-                className="bg-white rounded-2xl border border-stone-200 overflow-hidden shadow-xs"
-              >
-                <button
-                  onClick={() => setActiveFaq(activeFaq === idx ? null : idx)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between text-sm sm:text-base font-semibold text-stone-900 hover:text-rose-600 transition-colors"
-                >
-                  <span>{faq.qVi}</span>
-                  <span className="text-stone-400 font-normal text-xl ml-4">
-                    {activeFaq === idx ? '−' : '+'}
-                  </span>
-                </button>
-                {activeFaq === idx && (
-                  <div className="px-6 pb-4 text-xs sm:text-sm text-stone-600 leading-relaxed border-t border-stone-100 pt-3">
-                    {faq.aVi}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 9. BOTTOM CTA BANNER */}
-      <section className="py-16 bg-linear-to-r from-rose-600 via-rose-500 to-amber-500 text-white text-center">
-        <div className="max-w-4xl mx-auto px-4">
-          <h2 className="text-3xl sm:text-4xl font-bold font-display">
-            Sẵn Sàng Cho Ngày Chung Đôi Hoàn Hảo?
+      <section className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto max-w-3xl text-center">
+          <h2 className="font-display text-3xl font-semibold tracking-tight text-[#171313] sm:text-4xl lg:text-[42px]">
+            Mẫu thiệp cưới online <span className="font-script text-4xl font-normal text-[#ed0068] sm:text-5xl">đẹp nhất</span>
           </h2>
-          <p className="mt-3 text-rose-100 text-sm sm:text-base max-w-xl mx-auto font-body">
-            Khởi tạo thiệp cưới online chỉ trong 3 phút. Không cần thẻ tín dụng, trải nghiệm miễn phí ngay hôm nay!
+          <p className="mt-4 text-sm leading-7 text-[#958c8b] sm:text-base">
+            Khám phá những mẫu thiệp cưới được thiết kế tinh tế và hiện đại
           </p>
-          <div className="mt-8 flex flex-col sm:flex-row justify-center items-center gap-4">
-            <button
-              onClick={() => onNavigate('builder')}
-              className="px-8 py-4 rounded-full bg-white text-rose-600 font-bold text-sm sm:text-base shadow-xl hover:bg-stone-50 transition-colors active:scale-95"
-            >
-              Bắt đầu tạo thiệp cưới của bạn &rarr;
-            </button>
-            <button
-              onClick={() => onNavigate('invitation')}
-              className="px-6 py-4 rounded-full bg-rose-700/50 hover:bg-rose-700 text-white font-semibold text-sm sm:text-base border border-white/30 transition-colors"
-            >
-              Xem thiệp mẫu trước
-            </button>
+        </div>
+        <div className="template-carousel-stage relative mt-10 h-[510px] overflow-hidden bg-[#ebe9e9] px-2 py-5 sm:mt-12 sm:h-[590px] sm:px-5">
+          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_50%_45%,rgba(255,255,255,.88),transparent_42%)]" />
+          <button
+            onClick={() => setActiveTemplateIndex((activeTemplateIndex - 1 + featuredTemplates.length) % featuredTemplates.length)}
+            className="absolute left-3 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#3d302d] shadow-[0_8px_20px_rgba(80,60,60,.13)] transition hover:scale-105 hover:text-[#ed0068] sm:left-8"
+            aria-label="Mẫu trước"
+          >
+            <ChevronRight className="h-5 w-5 rotate-180" />
+          </button>
+          <button
+            onClick={() => setActiveTemplateIndex((activeTemplateIndex + 1) % featuredTemplates.length)}
+            className="absolute right-3 top-1/2 z-30 flex h-12 w-12 -translate-y-1/2 items-center justify-center rounded-full bg-white text-[#3d302d] shadow-[0_8px_20px_rgba(80,60,60,.13)] transition hover:scale-105 hover:text-[#ed0068] sm:right-8"
+            aria-label="Mẫu tiếp theo"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+
+          <div className="template-carousel-track relative mx-auto h-full max-w-[1500px]">
+            {featuredTemplates.map((template, index) => {
+              const offset = getCarouselOffset(index);
+              const isActive = offset === 0;
+              const distance = Math.abs(offset);
+
+              return (
+                <article
+                  key={template.id}
+                  className="template-carousel-card absolute top-1/2 w-[190px] transition-[transform,opacity,filter] duration-700 ease-out sm:w-[284px]"
+                  style={{
+                    left: 'calc(50% + var(--carousel-offset) * var(--carousel-gap))',
+                    '--carousel-offset': offset,
+                    '--carousel-scale': isActive ? 1 : 0.84 - Math.max(distance - 1, 0) * 0.06,
+                    opacity: isActive ? 1 : distance === 1 ? 0.58 : 0.2,
+                    filter: isActive ? 'none' : 'blur(0.4px)',
+                    zIndex: 10 - distance,
+                    pointerEvents: isActive ? 'auto' : 'none',
+                  }}
+                >
+                  <div className="rounded-[1.1rem] bg-white p-2 shadow-2xl shadow-[#6c5a5a]/25 sm:rounded-[1.25rem] sm:p-3">
+                    <div className="relative h-[350px] overflow-hidden rounded-[.8rem] bg-[#f5f0ec] sm:h-[520px] sm:rounded-[1rem]">
+                      <img
+                        src={getTemplateImage(template, index)}
+                        alt={template.name}
+                        onError={(event) => {
+                          event.currentTarget.src = template.coverImage;
+                        }}
+                        className={`template-scroll-image w-full object-cover ${isActive ? 'template-scroll-image-active' : 'h-full'}`}
+                      />
+                      {isActive && template.badge && (
+                        <span className="absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold text-[#b00045] shadow-sm backdrop-blur">
+                          {template.badge}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </article>
+              );
+            })}
+          </div>
+
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 sm:bottom-5">
+            {featuredTemplates.map((template, index) => (
+              <button
+                key={template.id}
+                onClick={() => setActiveTemplateIndex(index)}
+                className={`h-2.5 rounded-full transition-all ${index === activeTemplateIndex ? 'w-8 bg-[#ed0068]' : 'w-2.5 bg-[#bcb8b8] hover:bg-[#ed0068]/60'}`}
+                aria-label={`Xem ${template.name}`}
+              />
+            ))}
+          </div>
+        </div>
+        <div className="mt-8 text-center">
+          <button onClick={() => onNavigate('templates')} className="text-sm font-bold text-[#ed0068] transition hover:text-[#b00045]">
+            Xem tất cả mẫu thiệp <ArrowRight className="ml-1 inline h-4 w-4" />
+          </button>
+        </div>
+      </section>
+
+      <section className="bg-[#f1eeee] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto max-w-7xl text-center">
+          <p className="text-xs font-bold uppercase tracking-[.2em] text-[#ed0068]">Tạo thiệp cưới dễ dàng</p>
+          <h2 className="mt-3 font-display text-4xl font-semibold text-[#3d302d] sm:text-5xl">
+            Làm thiệp cưới online đơn giản
+          </h2>
+          <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-[#806f6f]">
+            Chỉ với 3 bước, bạn đã có một tấm thiệp mang câu chuyện riêng của hai bạn.
+          </p>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-5 md:grid-cols-3">
+            {[
+              ['01', 'Chọn mẫu', 'Khám phá hàng trăm mẫu thiệp tinh tế, hiện đại và truyền thống.'],
+              ['02', 'Điền thông tin', 'Thêm tên, ngày cưới, địa điểm, ảnh và lời nhắn của riêng bạn.'],
+              ['03', 'Chia sẻ', 'Gửi thiệp qua Zalo, Messenger hoặc mã QR đến khách mời.'],
+            ].map(([number, title, description]) => (
+              <div key={number} className="relative rounded-3xl bg-white p-7 text-left shadow-sm">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-[#ed0068] text-xs font-bold text-white">{number}</span>
+                <h3 className="mt-6 font-display text-2xl font-semibold">{title}</h3>
+                <p className="mt-3 text-sm leading-6 text-[#806f6f]">{description}</p>
+              </div>
+            ))}
+          </div>
+          <button onClick={goToBuilder} className="mt-10 rounded-full bg-[#ed0068] px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#ed0068]/20">
+            Bắt đầu tạo thiệp <ArrowRight className="ml-1 inline h-4 w-4" />
+          </button>
+        </div>
+      </section>
+
+      <section className="bg-[#dcd9da] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto max-w-7xl">
+          <div className="text-center">
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#ed0068]">Được yêu thích bởi khách hàng</p>
+            <h2 className="mt-3 font-display text-4xl font-semibold text-[#3d302d] sm:text-5xl">
+              Đánh giá từ <span className="italic text-[#ed0068]">khách hàng</span>
+            </h2>
+          </div>
+          <div className="mt-10 grid gap-4 md:grid-cols-3">
+            {[
+              ['Linh & Minh', 'Thiệp rất đẹp và dễ chỉnh sửa. Khách mời của tụi mình ai cũng khen giao diện xinh.'],
+              ['Hạnh & Hoàng', 'Tạo xong chỉ vài phút là gửi được cho cả hai bên gia đình, tiện hơn thiệp giấy rất nhiều.'],
+              ['Anh & Dương', 'Đội ngũ hỗ trợ nhanh, tư vấn mẫu thiệp và cách viết lời mời rất tận tâm.'],
+            ].map(([name, content]) => (
+              <article key={name} className="rounded-3xl bg-white p-6 shadow-sm">
+                <div className="flex gap-1 text-[#ed0068]">{[1, 2, 3, 4, 5].map((item) => <Star key={item} className="h-4 w-4 fill-current" />)}</div>
+                <p className="mt-5 text-sm leading-7 text-[#675958]">“{content}”</p>
+                <p className="mt-5 text-xs font-bold text-[#3d302d]">{name}</p>
+              </article>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* 10. FOOTER */}
-      <footer className="bg-stone-900 text-stone-400 text-xs py-12 border-t border-stone-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
-            <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-white font-bold text-lg font-display">
-                <Heart className="w-5 h-5 text-rose-500 fill-rose-500" />
-                <span>Chung Đôi</span>
-              </div>
-              <p className="text-stone-400 text-xs leading-relaxed">
-                Nền tảng tạo website đám cưới &amp; thiệp cưới trực tuyến thông minh, thanh lịch và mang đậm dấu ấn hạnh phúc của đôi lứa.
-              </p>
-              <div className="text-[11px] text-stone-500">
-                &copy; {new Date().getFullYear()} ChungDoi.com. All rights reserved.
-              </div>
+      <section className="bg-[#f7f1ee] px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-2">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[.2em] text-[#ed0068]">Theo dõi ngày vui</p>
+            <h2 className="mt-3 font-display text-4xl font-semibold leading-tight text-[#3d302d] sm:text-5xl">
+              Biết ai đã đến, <span className="italic text-[#ed0068]">điều gì cần làm</span>
+            </h2>
+            <p className="mt-5 leading-7 text-[#806f6f]">Quản lý khách mời, RSVP và tiến độ chuẩn bị đám cưới trong một nơi duy nhất.</p>
+            <div className="mt-7 space-y-3 text-sm text-[#675958]">
+              {['Theo dõi xác nhận tham dự theo thời gian thực', 'Quản lý checklist và ngân sách cưới', 'Chia sẻ link thiệp riêng cho từng khách mời'].map((item) => <div key={item} className="flex items-center gap-2"><Check className="h-4 w-4 text-[#ed0068]" />{item}</div>)}
             </div>
+            <button onClick={() => onNavigate('dashboard')} className="mt-8 rounded-full bg-[#ed0068] px-6 py-3 text-sm font-bold text-white">Khám phá dashboard</button>
+          </div>
+          <div className="rounded-[2rem] border border-white bg-white p-5 shadow-xl">
+            <div className="flex items-center justify-between border-b border-stone-100 pb-4"><div><p className="text-xs text-stone-400">Tổng lượt xem thiệp</p><p className="mt-1 font-display text-4xl font-semibold">1,420</p></div><div className="rounded-2xl bg-[#fce5ef] p-3 text-[#ed0068]"><BarChart3 className="h-6 w-6" /></div></div>
+            <div className="mt-6 flex h-36 items-end gap-3">{[32, 48, 42, 75, 58, 92, 68, 100].map((height, index) => <div key={index} className="flex-1 rounded-t-lg bg-[#ed0068]/80" style={{ height: `${height}%` }} />)}</div>
+            <div className="mt-4 flex justify-between text-[10px] text-stone-400"><span>Thứ 2</span><span>Thứ 4</span><span>Thứ 6</span><span>Hôm nay</span></div>
+          </div>
+        </div>
+      </section>
 
-            <div>
-              <h4 className="text-white font-semibold text-sm mb-3">Tính Năng &amp; Quản Lý</h4>
-              <ul className="space-y-2">
-                <li>
-                  <button onClick={() => onNavigate('builder')} className="hover:text-white transition-colors">
-                    Tạo thiệp cưới trực tuyến
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('rsvp-dashboard')} className="hover:text-white transition-colors">
-                    Quản lý khách mời &amp; RSVP
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('budget-calc')} className="hover:text-white transition-colors">
-                    Dự trù chi phí &amp; Ngân sách cưới
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('wedding-plan')} className="hover:text-white transition-colors">
-                    Kế hoạch &amp; Checklist 12 tuần
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('seating-chart')} className="hover:text-white transition-colors">
-                    Sơ đồ xếp bàn tiệc (Seating Chart)
-                  </button>
-                </li>
-              </ul>
-            </div>
+      <section className="bg-[#302526] px-5 py-20 text-white sm:px-8 lg:px-12 lg:py-24">
+        <div className="mx-auto max-w-6xl">
+          <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
+            <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#ff71ad]">Dịch vụ cưới</p><h2 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Thuê váy cưới, vest & <span className="italic text-[#ff71ad]">chụp ảnh</span></h2><p className="mt-4 max-w-xl text-sm leading-7 text-[#d9c9c6]">Chuẩn bị trọn vẹn cho ngày trọng đại với các dịch vụ được tuyển chọn cùng ChungĐôi.</p></div>
+            <button onClick={() => onNavigate('services')} className="inline-flex items-center gap-2 rounded-full bg-[#ed0068] px-5 py-3 text-sm font-bold text-white">Xem tất cả dịch vụ <ArrowRight className="h-4 w-4" /></button>
+          </div>
+          <div className="mt-10 grid gap-5 md:grid-cols-3">
+            {serviceHighlights.map((service) => <article key={service.id} className="group overflow-hidden rounded-3xl bg-white text-[#3d302d]"><div className="h-56 overflow-hidden"><img src={service.image} alt={service.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div><div className="p-5"><div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#ed0068]">{service.category === 'photo' ? <Camera className="h-3.5 w-3.5" /> : <Shirt className="h-3.5 w-3.5" />}{service.categoryLabel}</div><h3 className="mt-2 font-display text-2xl font-semibold">{service.name}</h3><p className="mt-2 text-sm text-stone-600">{service.price}</p><button onClick={() => onNavigate('services')} className="mt-4 text-xs font-bold text-[#ed0068]">Xem chi tiết <ChevronRight className="inline h-4 w-4" /></button></div></article>)}
+          </div>
+        </div>
+      </section>
 
-            <div>
-              <h4 className="text-white font-semibold text-sm mb-3">Công Cụ &amp; Mẫu</h4>
-              <ul className="space-y-2">
-                <li>
-                  <button onClick={() => onNavigate('templates')} className="hover:text-white transition-colors">
-                    Kho 400+ mẫu thiệp cưới đẹp
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('invitation-messages')} className="hover:text-white transition-colors">
-                    Tin nhắn mời cưới Zalo &amp; SMS
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('speeches')} className="hover:text-white transition-colors">
-                    Bài phát biểu đám cưới chuẩn lễ nghi
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('save-the-date')} className="hover:text-white transition-colors">
-                    Tạo ảnh Báo Hỷ (Save The Date)
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('compress-image')} className="hover:text-white transition-colors">
-                    Nén dung lượng ảnh cưới online
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('lunar-converter')} className="hover:text-white transition-colors">
-                    Đổi ngày âm - dương cưới hỏi
-                  </button>
-                </li>
-              </ul>
-            </div>
+      <section className="mx-auto max-w-4xl px-5 py-20 sm:px-8 lg:py-28">
+        <div className="text-center"><p className="text-xs font-bold uppercase tracking-[.2em] text-[#ed0068]">Giải đáp</p><h2 className="mt-3 font-display text-4xl font-semibold text-[#3d302d]">Câu hỏi thường gặp về thiệp cưới online</h2></div>
+        <div className="mt-10 divide-y divide-[#eadedb] rounded-3xl border border-[#eadedb] bg-white">
+          {['Thiệp cưới online là gì?', 'Làm thế nào để tạo một tấm thiệp cưới?', 'Thiệp có thể chia sẻ qua Zalo không?', 'Tôi có thể thuê váy và vest qua ChungĐôi không?', 'Khách mời có cần cài ứng dụng không?'].map((question) => <details key={question} className="group px-5"><summary className="flex cursor-pointer list-none items-center justify-between py-5 text-sm font-semibold text-[#3d302d]">{question}<ChevronDown className="h-4 w-4 transition group-open:rotate-180" /></summary><p className="pb-5 text-sm leading-6 text-[#806f6f]">Bạn có thể thao tác trực tiếp trên website. Đội ngũ ChungĐôi luôn sẵn sàng hỗ trợ nếu bạn cần tư vấn thêm.</p></details>)}
+        </div>
+      </section>
 
+      <section className="bg-[#f7f1ee]">
+        <div className="mx-auto max-w-7xl px-5 py-20 sm:px-8 lg:px-12 lg:py-28">
+          <div className="grid gap-14 lg:grid-cols-[.8fr_1.2fr] lg:items-center">
             <div>
-              <h4 className="text-white font-semibold text-sm mb-3">Cẩm Nang &amp; Hỗ Trợ</h4>
-              <ul className="space-y-2">
-                <li>
-                  <button onClick={() => onNavigate('blog')} className="hover:text-white transition-colors">
-                    Cẩm nang &amp; Kinh nghiệm cưới hỏi
-                  </button>
-                </li>
-                <li>
-                  <button onClick={() => onNavigate('pricing')} className="hover:text-white transition-colors">
-                    Bảng giá &amp; Gói dịch vụ
-                  </button>
-                </li>
-                <li className="text-stone-300">Hotline / Zalo: 0988 123 456</li>
-                <li className="text-stone-300">Email: hotro@chungdoi.com</li>
-                <li className="text-stone-400 text-[11px] pt-1">TP. Hồ Chí Minh &amp; Hà Nội</li>
-              </ul>
+              <p className="text-xs font-bold uppercase tracking-[.2em] text-[#ed0068]">Đơn giản hơn bạn nghĩ</p>
+              <h2 className="mt-3 font-display text-4xl font-semibold leading-tight text-[#3d302d] sm:text-5xl">
+                Tụi mình lo phần thiệp, bạn tận hưởng ngày vui
+              </h2>
+              <button onClick={goToBuilder} className="mt-8 inline-flex items-center gap-2 rounded-full bg-[#ed0068] px-6 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#ed0068]/20">
+                Bắt đầu ngay <ArrowRight className="h-4 w-4" />
+              </button>
             </div>
+            <div className="grid gap-4 sm:grid-cols-3">
+              {benefits.map(([number, title, description]) => (
+                <div key={number} className="rounded-3xl bg-white p-6 shadow-sm">
+                  <span className="font-display text-3xl text-[#ed0068]">{number}</span>
+                  <h3 className="mt-8 font-display text-xl font-semibold">{title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-[#806f6f]">{description}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-20 text-center sm:px-8 lg:px-12 lg:py-28">
+        <div className="mx-auto max-w-2xl">
+          <Heart className="mx-auto h-8 w-8 fill-[#ed0068] text-[#ed0068]" />
+          <h2 className="mt-4 font-display text-4xl font-semibold text-[#3d302d]">Khi bạn cần, tụi mình luôn có mặt</h2>
+          <p className="mt-4 leading-7 text-[#806f6f]">Cần hỗ trợ chọn mẫu hay chỉnh sửa thiệp? Nhắn tụi mình bất cứ khi nào bạn cần.</p>
+          <button className="mt-7 inline-flex items-center gap-2 rounded-full border border-[#eadedb] bg-white px-6 py-3 text-sm font-bold text-[#3d302d] shadow-sm transition hover:border-[#ed0068] hover:text-[#ed0068]">
+            <MessageCircle className="h-4 w-4" /> Nhắn tụi mình
+          </button>
+        </div>
+      </section>
+
+      <footer className="bg-[#302526] px-5 py-12 text-[#d9c9c6] sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-7xl flex-col gap-8 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="font-display text-2xl font-semibold text-white">ChungĐôi<span className="text-[#ed0068]">.com</span></div>
+            <p className="mt-2 text-xs text-[#a99391]">Thiệp cưới online đẹp, đơn giản và chân thành.</p>
+          </div>
+          <div className="flex flex-wrap gap-5 text-xs">
+            <button onClick={() => onNavigate('templates')} className="hover:text-white">Mẫu thiệp</button>
+            <button onClick={() => onNavigate('pricing')} className="hover:text-white">Bảng giá</button>
+            <button onClick={() => onNavigate('blog')} className="hover:text-white">Cẩm nang</button>
+            <button onClick={() => onNavigate('login')} className="hover:text-white">Đăng nhập</button>
           </div>
         </div>
       </footer>

@@ -11,6 +11,8 @@ import {
   X,
   Wrench,
   BookOpen,
+  MessageCircle,
+  Shirt,
   Tag,
   LayoutDashboard,
   ShieldAlert,
@@ -40,34 +42,22 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems: Array<{ id: ViewMode; labelVi: string; labelEn: string; icon: React.ReactNode }> = [
     {
-      id: 'landing',
-      labelVi: 'Trang chủ',
-      labelEn: 'Home',
-      icon: <Sparkles className="w-3.5 h-3.5" />,
+      id: 'services',
+      labelVi: 'Thuê trang phục',
+      labelEn: 'Wedding Services',
+      icon: <Shirt className="w-3.5 h-3.5" />,
+    },
+    {
+      id: 'customs',
+      labelVi: 'Phong tục & AI',
+      labelEn: 'Customs AI',
+      icon: <MessageCircle className="w-3.5 h-3.5" />,
     },
     {
       id: 'templates',
       labelVi: 'Kho mẫu thiệp',
       labelEn: 'Templates',
       icon: <Layout className="w-3.5 h-3.5" />,
-    },
-    {
-      id: 'builder',
-      labelVi: 'Tạo thiệp cưới',
-      labelEn: 'Wedding Studio',
-      icon: <PlusCircle className="w-3.5 h-3.5" />,
-    },
-    {
-      id: 'tools',
-      labelVi: 'Công cụ cưới',
-      labelEn: 'Wedding Tools',
-      icon: <Wrench className="w-3.5 h-3.5" />,
-    },
-    {
-      id: 'rsvp-dashboard',
-      labelVi: 'Khách & RSVP',
-      labelEn: 'RSVP Manager',
-      icon: <Users className="w-3.5 h-3.5" />,
     },
     {
       id: 'pricing',
@@ -81,34 +71,28 @@ export const Navbar: React.FC<NavbarProps> = ({
       labelEn: 'Guides & Blog',
       icon: <BookOpen className="w-3.5 h-3.5" />,
     },
-    {
-      id: 'invitation',
-      labelVi: 'Xem thiệp mẫu',
-      labelEn: 'Demo',
-      icon: <Eye className="w-3.5 h-3.5" />,
-    },
   ];
 
   return (
-    <header className="sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b border-stone-200/80 shadow-xs">
+    <header className="sticky top-0 z-40 bg-[#fbf8f3]/95 backdrop-blur-md border-b border-[#e9dfd5]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-[74px]">
           {/* Logo */}
           <div
             id="brand-logo"
             onClick={() => onNavigate('landing')}
             className="flex items-center space-x-2.5 cursor-pointer group select-none"
           >
-            <div className="w-9 h-9 rounded-full bg-linear-to-tr from-rose-500 to-amber-400 flex items-center justify-center text-white shadow-sm shadow-rose-200 group-hover:scale-105 transition-transform">
+            <div className="w-10 h-10 rounded-full bg-[#a9232c] flex items-center justify-center text-[#f9e9d8] shadow-sm shadow-rose-200 group-hover:scale-105 transition-transform">
               <Heart className="w-5 h-5 fill-white" />
             </div>
             <div>
               <div className="flex items-baseline space-x-1.5">
-                <span className="text-xl font-bold tracking-tight text-stone-900 font-display">
-                  Chung Đôi
+                <span className="text-[22px] font-semibold tracking-tight text-[#432d29] font-display">
+                  ChungĐôi
                 </span>
-                <span className="text-xs font-semibold text-rose-500 uppercase tracking-widest px-1.5 py-0.5 bg-rose-50 rounded">
-                  .vn
+                <span className="text-[11px] font-semibold text-[#a9232c] tracking-wide">
+                  .com
                 </span>
               </div>
               <p className="text-[10px] text-stone-700 hidden sm:block -mt-0.5">
