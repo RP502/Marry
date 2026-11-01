@@ -13,6 +13,7 @@ import {
   BookOpen,
   MessageCircle,
   Shirt,
+  Compass,
   Tag,
   LayoutDashboard,
   ShieldAlert,
@@ -42,10 +43,10 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems: Array<{ id: ViewMode; labelVi: string; labelEn: string; icon: React.ReactNode }> = [
     {
-      id: 'services',
-      labelVi: 'Thuê trang phục',
-      labelEn: 'Wedding Services',
-      icon: <Shirt className="w-3.5 h-3.5" />,
+      id: 'kham-pha',
+      labelVi: 'Khám phá',
+      labelEn: 'Explore',
+      icon: <Compass className="w-3.5 h-3.5" />,
     },
     {
       id: 'customs',
@@ -104,7 +105,8 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Desktop Nav Items */}
           <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
             {navItems.map((item) => {
-              const isActive = currentView === item.id;
+              const isActive =
+                currentView === item.id || (item.id === 'kham-pha' && currentView === 'services');
               return (
                 <button
                   key={item.id}
@@ -223,7 +225,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                 setMobileMenuOpen(false);
               }}
               className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                currentView === item.id
+                currentView === item.id || (item.id === 'kham-pha' && currentView === 'services')
                   ? 'bg-rose-50 text-rose-700 font-semibold'
                   : 'text-stone-600 hover:bg-stone-50'
               }`}

@@ -95,6 +95,8 @@ export default function App() {
         setCurrentView('builder');
       } else if (path === INITIAL_WEDDING_DATA.slug) {
         setCurrentView('invitation');
+      } else if (path === 'kham-pha' || path === 'explore') {
+        setCurrentView('kham-pha');
       } else if ([
         'admin',
         'dashboard',
@@ -109,6 +111,7 @@ export default function App() {
         'share',
         'customs',
         'services',
+        'kham-pha',
         'tools',
         'blog',
         'pricing',
@@ -284,7 +287,7 @@ export default function App() {
           />
         )}
 
-        {currentView === 'services' && (
+        {(currentView === 'services' || currentView === 'kham-pha') && (
           <WeddingServicesPage
             onNavigate={(view) => {
               setCurrentView(view);

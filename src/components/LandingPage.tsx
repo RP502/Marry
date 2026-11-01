@@ -7,6 +7,7 @@ import {
   MessageCircle,
   Camera,
   Shirt,
+  Building2,
   BarChart3,
   ChevronDown,
   Play,
@@ -307,11 +308,11 @@ export const LandingPage: React.FC<LandingPageProps> = ({
       <section className="bg-[#302526] px-5 py-20 text-white sm:px-8 lg:px-12 lg:py-24">
         <div className="mx-auto max-w-6xl">
           <div className="flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
-            <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#ff71ad]">Dịch vụ cưới</p><h2 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Thuê váy cưới, vest & <span className="italic text-[#ff71ad]">chụp ảnh</span></h2><p className="mt-4 max-w-xl text-sm leading-7 text-[#d9c9c6]">Chuẩn bị trọn vẹn cho ngày trọng đại với các dịch vụ được tuyển chọn cùng ChungĐôi.</p></div>
-            <button onClick={() => onNavigate('services')} className="inline-flex items-center gap-2 rounded-full bg-[#ed0068] px-5 py-3 text-sm font-bold text-white">Xem tất cả dịch vụ <ArrowRight className="h-4 w-4" /></button>
+            <div><p className="text-xs font-bold uppercase tracking-[.2em] text-[#ff71ad]">Khám phá dịch vụ cưới</p><h2 className="mt-3 font-display text-4xl font-semibold sm:text-5xl">Nhà hàng tiệc cưới, Studio &amp; <span className="italic text-[#ff71ad]">Trang phục</span></h2><p className="mt-4 max-w-xl text-sm leading-7 text-[#d9c9c6]">Tìm kiếm nhà cung cấp uy tín theo tiêu chuẩn Plan Cưới &amp; ChungĐôi với ưu đãi độc quyền.</p></div>
+            <button onClick={() => onNavigate('kham-pha')} className="inline-flex items-center gap-2 rounded-full bg-[#ed0068] px-5 py-3 text-sm font-bold text-white">Khám phá tất cả <ArrowRight className="h-4 w-4" /></button>
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
-            {serviceHighlights.map((service) => <article key={service.id} className="group overflow-hidden rounded-3xl bg-white text-[#3d302d]"><div className="h-56 overflow-hidden"><img src={service.image} alt={service.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div><div className="p-5"><div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#ed0068]">{service.category === 'photo' ? <Camera className="h-3.5 w-3.5" /> : <Shirt className="h-3.5 w-3.5" />}{service.categoryLabel}</div><h3 className="mt-2 font-display text-2xl font-semibold">{service.name}</h3><p className="mt-2 text-sm text-stone-600">{service.price}</p><button onClick={() => onNavigate('services')} className="mt-4 text-xs font-bold text-[#ed0068]">Xem chi tiết <ChevronRight className="inline h-4 w-4" /></button></div></article>)}
+            {serviceHighlights.map((service) => <article key={service.id} className="group overflow-hidden rounded-3xl bg-white text-[#3d302d]"><div className="h-56 overflow-hidden"><img src={service.image} alt={service.name} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" /></div><div className="p-5"><div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#ed0068]">{service.category === 'photo' ? <Camera className="h-3.5 w-3.5" /> : <Building2 className="h-3.5 w-3.5" />}{service.categoryLabel}</div><h3 className="mt-2 font-display text-2xl font-semibold">{service.name}</h3><p className="mt-2 text-sm text-stone-600 font-bold">{service.priceStarting} / {service.priceType}</p><button onClick={() => onNavigate('kham-pha')} className="mt-4 text-xs font-bold text-[#ed0068]">Xem chi tiết &amp; báo giá <ChevronRight className="inline h-4 w-4" /></button></div></article>)}
           </div>
         </div>
       </section>

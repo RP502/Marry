@@ -30,7 +30,8 @@ export type ViewMode =
   | 'public-analytics'
   | 'share'
   | 'customs'
-  | 'services';
+  | 'services'
+  | 'kham-pha';
 
 export interface UserAccount {
   id: string;
