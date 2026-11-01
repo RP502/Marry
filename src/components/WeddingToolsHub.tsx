@@ -299,7 +299,7 @@ export const WeddingToolsHub: React.FC<WeddingToolsHubProps> = ({
     // Footer signature
     ctx.font = '22px sans-serif';
     ctx.fillStyle = '#94A3B8';
-    ctx.fillText('Thiệp cưới online tạo bởi Chung Đôi (chungdoi.com)', 540, 1220);
+    ctx.fillText('Thiệp cưới online tạo bởi Cưới thôiii (cuoithoiii.com)', 540, 1220);
 
     // Download image
     const link = document.createElement('a');
@@ -325,7 +325,7 @@ export const WeddingToolsHub: React.FC<WeddingToolsHubProps> = ({
         {/* Header Title */}
         <div className="text-center max-w-3xl mx-auto mb-10">
           <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-            Trung Tâm Công Cụ Cưới Chung Đôi
+            Trung Tâm Công Cụ Cưới thôiii
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold font-display text-stone-900 mt-3">
             Trọn Bộ Công Cụ &amp; Tiện Ích Chuẩn Bị Đám Cưới
@@ -1062,7 +1062,7 @@ export const WeddingToolsHub: React.FC<WeddingToolsHubProps> = ({
                   </div>
                   <div className="text-xs text-stone-600 font-medium">{stdVenueCity}</div>
                   <div className="text-[10px] text-stone-400 pt-2 font-mono">
-                    chungdoi.com/vi &bull; Thiệp cưới online
+                    cuoithoiii.com &bull; Thiệp cưới online
                   </div>
                 </div>
               </div>
@@ -1201,7 +1201,7 @@ export const WeddingToolsHub: React.FC<WeddingToolsHubProps> = ({
                   <div className="flex justify-center pt-2">
                     <a
                       href={compressedImage}
-                      download="ChungDoi_Compressed_Photo.jpg"
+                      download="CuoiThoiii_Compressed_Photo.jpg"
                       className="px-6 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md shadow-emerald-200 flex items-center space-x-2 transition-colors"
                     >
                       <Download className="w-4 h-4" />

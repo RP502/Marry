@@ -61,7 +61,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate, lang }) =>
       features: [
         'Tất cả tính năng của gói Hạnh Phúc',
         'Lưu trữ website tình yêu VĨNH VIỄN trọn đời',
-        'Tên miền riêng ngắn gọn (vd: trietvy.chungdoi.vn)',
+        'Tên miền riêng ngắn gọn (vd: trietvy.cuoithoiii.vn)',
         'Xuất file mã QR vector chuẩn in ấn lên thiệp giấy',
         'Gói quà tặng: Trọn bộ công cụ tính ngân sách & checklist',
         'Hỗ trợ chỉnh sửa và thêm hiệu ứng riêng theo yêu cầu',
@@ -79,11 +79,11 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate, lang }) =>
     },
     {
       q: 'Tiền mừng cưới qua VietQR có bị trừ phí hay qua trung gian không?',
-      a: 'Chung Đôi KHÔNG giữ tiền và KHÔNG thu bất kỳ % phí giao dịch nào. Khi khách quét mã VietQR, tiền sẽ chuyển thẳng 100% vào tài khoản ngân hàng cá nhân của cô dâu hoặc chú rể qua hệ thống Napas 24/7.',
+      a: 'Cưới thôiii KHÔNG giữ tiền và KHÔNG thu bất kỳ % phí giao dịch nào. Khi khách quét mã VietQR, tiền sẽ chuyển thẳng 100% vào tài khoản ngân hàng cá nhân của cô dâu hoặc chú rể qua hệ thống Napas 24/7.',
     },
     {
       q: 'Tôi thanh toán gói dịch vụ như thế nào?',
-      a: 'Chung Đôi hỗ trợ thanh toán siêu nhanh qua chuyển khoản ngân hàng quét mã QR (VietQR) hoặc ví điện tử MoMo. Sau khi thanh toán, hệ thống sẽ tự động kích hoạt tài khoản chỉ sau 10 giây.',
+      a: 'Cưới thôiii hỗ trợ thanh toán siêu nhanh qua chuyển khoản ngân hàng quét mã QR (VietQR) hoặc ví điện tử MoMo. Sau khi thanh toán, hệ thống sẽ tự động kích hoạt tài khoản chỉ sau 10 giây.',
     },
     {
       q: 'Người lớn tuổi trong gia đình có dễ xem thiệp không?',
@@ -100,7 +100,7 @@ export const PricingPage: React.FC<PricingPageProps> = ({ onNavigate, lang }) =>
             Bảng Giá Minh Bạch
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold font-display text-stone-900 mt-3">
-            Bảng Giá Dịch Vụ Thiệp Cưới &amp; Website Chung Đôi
+            Bảng Giá Dịch Vụ Thiệp Cưới &amp; Website Cưới thôiii
           </h1>
           <p className="text-sm sm:text-base text-stone-600 mt-2 font-body">
             Chi phí chỉ bằng 1/10 so với in thiệp giấy truyền thống. Tiết kiệm hàng triệu đồng cho

@@ -254,7 +254,7 @@ export const INITIAL_BUDGET_ITEMS: BudgetItem[] = [
   {
     id: 'b-15',
     category: 'Thiệp mời & Quà cảm ơn',
-    name: 'Website đám cưới & Thiệp cưới online Chung Đôi',
+    name: 'Website đám cưới & Thiệp cưới online Cưới thôiii',
     estimatedCost: 399000,
     actualCost: 399000,
     paid: true,
@@ -370,7 +370,7 @@ export const INITIAL_CHECKLIST_TASKS: ChecklistTask[] = [
     id: 't-8',
     phase: '3months',
     phaseLabel: 'Trước 3 - 4 Tháng',
-    title: 'Tạo website đám cưới & Thiệp cưới online Chung Đôi',
+    title: 'Tạo website đám cưới & Thiệp cưới online Cưới thôiii',
     description: 'Cập nhật câu chuyện tình yêu, album ảnh cưới, lịch trình và cấu hình VietQR.',
     completed: true,
   },
@@ -414,7 +414,7 @@ export const INITIAL_CHECKLIST_TASKS: ChecklistTask[] = [
     id: 't-13',
     phase: '2weeks',
     phaseLabel: 'Trước 2 Tuần',
-    title: 'Kiểm tra phản hồi RSVP trên Chung Đôi & Chốt số bàn tiệc',
+    title: 'Kiểm tra phản hồi RSVP trên Cưới thôiii & Chốt số bàn tiệc',
     description: 'Gọi điện nhắc nhở những khách còn lưỡng lự để tránh thừa/thiếu cỗ.',
     completed: false,
   },
@@ -632,7 +632,7 @@ export const BLOG_POSTS: BlogPost[] = [
     content: [
       'Thời đại 4.0, việc gửi thiệp cưới qua Zalo, Facebook trở nên cực kỳ phổ biến vì tính tiện lợi và tiết kiệm. Tuy nhiên, rất nhiều cặp dâu rể gặp tình trạng “dở khóc dở cười”: Khách trả lời “Ok chúc mừng nhé” nhưng đến ngày cưới thì vắng mặt không lý do.',
       'Nguyên nhân cốt lõi là sự hời hợt khi sao chép một tin nhắn chung gửi hàng loạt (copy-paste). Khách mời cảm thấy họ chỉ là một con số trong danh sách, không có cảm giác được trân trọng đích danh.',
-      'Giải pháp tinh tế nhất hiện nay chính là sử dụng Thiệp cưới online cá nhân hoá của Chung Đôi: Trên phong bì thiệp điện tử hiển thị đúng danh xưng “Kính gửi: Anh Hoàng Nam & Bạn gái”, kết hợp tính năng xác nhận tham dự (RSVP) trực tiếp giúp khách cảm thấy trang trọng hệt như nhận tấm thiệp trao tay.',
+      'Giải pháp tinh tế nhất hiện nay chính là sử dụng Thiệp cưới online cá nhân hoá của Cưới thôiii: Trên phong bì thiệp điện tử hiển thị đúng danh xưng “Kính gửi: Anh Hoàng Nam & Bạn gái”, kết hợp tính năng xác nhận tham dự (RSVP) trực tiếp giúp khách cảm thấy trang trọng hệt như nhận tấm thiệp trao tay.',
     ],
   },
   {
@@ -678,7 +678,7 @@ export const BLOG_POSTS: BlogPost[] = [
     coverImage: 'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1000&q=80',
     content: [
       'Tặng vàng cưới từ lâu đã là nét văn hóa chúc phúc đẹp đẽ mang tính tích lũy tài sản cho đôi uyên ương mới lập gia đình.',
-      'Với anh chị em ruột hoặc bạn nối khố tri kỷ, nửa chỉ hoặc 1 chỉ vàng nhẫn trơn là món quà kỷ niệm vô giá. Còn đối với bạn bè xã giao hay khách mời ở xa, việc quét mã VietQR trực tiếp trên thiệp cưới Chung Đôi là giải pháp vừa văn minh, vừa tế nhị và bảo mật tuyệt đối.',
+      'Với anh chị em ruột hoặc bạn nối khố tri kỷ, nửa chỉ hoặc 1 chỉ vàng nhẫn trơn là món quà kỷ niệm vô giá. Còn đối với bạn bè xã giao hay khách mời ở xa, việc quét mã VietQR trực tiếp trên thiệp cưới Cưới thôiii là giải pháp vừa văn minh, vừa tế nhị và bảo mật tuyệt đối.',
     ],
   },
 ];

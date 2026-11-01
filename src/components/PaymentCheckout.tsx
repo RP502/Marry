@@ -33,14 +33,14 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
   const [isVerifying, setIsVerifying] = useState(false);
   const [isPaidSuccess, setIsPaidSuccess] = useState(false);
 
-  const orderCode = 'CD-89215';
+  const orderCode = 'CT-89215';
   const amount = selectedPlan === 'pro' ? 199000 : 399000;
   const transferContent = `${orderCode} ${user?.phone?.replace(/\s/g, '') || '0988123456'}`;
 
   // VietQR URL format
   const qrUrl = `https://img.vietqr.io/image/970436-1028888999-compact2.png?amount=${amount}&addInfo=${encodeURIComponent(
     transferContent
-  )}&accountName=CONG%20TY%20CHUNG%20DOI%20VIETNAM`;
+  )}&accountName=CONG%20TY%20CUOI%20THOIII%20VIETNAM`;
 
   const handleCopyAcc = () => {
     navigator.clipboard.writeText('1028888999');
@@ -112,7 +112,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
             <div className="lg:col-span-7 space-y-6">
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold font-display text-stone-900">
-                  Nâng Cấp Gói Dịch Vụ Chung Đôi
+                  Nâng Cấp Gói Dịch Vụ Cưới thôiii
                 </h1>
                 <p className="text-xs sm:text-sm text-stone-500 mt-1">
                   Thanh toán 1 lần duy nhất, kích hoạt ngay lập tức với công nghệ VietQR Napas 24/7.
@@ -260,7 +260,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
                 <div className="bg-stone-50 p-4 rounded-2xl border border-stone-100 flex flex-col items-center justify-center mb-5">
                   <img
                     src={qrUrl}
-                    alt="VietQR Chung Doi"
+                    alt="VietQR Cuoi Thoiii"
                     className="w-52 h-52 object-contain rounded-xl shadow-xs"
                   />
                   <span className="text-[10px] text-stone-400 mt-2 flex items-center space-x-1">
@@ -292,7 +292,7 @@ export const PaymentCheckout: React.FC<PaymentCheckoutProps> = ({
 
                   <div className="flex justify-between py-1.5 border-b border-stone-100">
                     <span className="text-stone-400">Chủ tài khoản:</span>
-                    <strong className="text-stone-900 uppercase text-[11px]">CONG TY CHUNG DOI VIETNAM</strong>
+                    <strong className="text-stone-900 uppercase text-[11px]">CONG TY CUOI THOIII VIETNAM</strong>
                   </div>
 
                   <div className="flex justify-between py-1.5 border-b border-stone-100">

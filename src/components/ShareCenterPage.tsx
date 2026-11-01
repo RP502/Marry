@@ -171,7 +171,7 @@ export const ShareCenterPage: React.FC<ShareCenterPageProps> = ({
                   <p className="text-[11px] text-stone-500 line-clamp-2 mt-0.5">
                     Trân trọng kính mời quý khách đến dự lễ thành hôn vào ngày {weddingData.mainCeremony.date} tại {weddingData.mainCeremony.venueName}.
                   </p>
-                  <span className="text-[10px] text-stone-400 block mt-1">chungdoi.com</span>
+                  <span className="text-[10px] text-stone-400 block mt-1">cuoithoiii.com</span>
                 </div>
               </div>
             </div>
@@ -205,7 +205,7 @@ export const ShareCenterPage: React.FC<ShareCenterPageProps> = ({
               <div className="space-y-2.5">
                 <a
                   href={qrDownloadUrl}
-                  download="ma_qr_thiep_cuoi_chungdoi.png"
+                  download="ma_qr_thiep_cuoi_cuoithoiii.png"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-3 rounded-2xl bg-rose-500 hover:bg-rose-600 text-white font-bold text-xs shadow-md transition-all flex items-center justify-center space-x-2"

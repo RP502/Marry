@@ -25,6 +25,7 @@ import { PublicAnalyticsView } from './components/PublicAnalyticsView';
 import { ShareCenterPage } from './components/ShareCenterPage';
 import { GuestViewerPage } from './components/GuestViewerPage';
 import { CustomsAdvisorPage } from './components/CustomsAdvisorPage';
+import { HoiHoaPage } from './components/HoiHoaPage';
 import { ChatbotWidget } from './components/ChatbotWidget';
 import { WeddingServicesPage } from './components/WeddingServicesPage';
 import { INITIAL_USER_ACCOUNT } from './data/adminMockData';
@@ -45,6 +46,52 @@ export default function App() {
       return null;
     }
   });
+
+  // Auth popup modal state
+  const [authModalState, setAuthModalState] = useState<{
+    isOpen: boolean;
+    mode: 'login' | 'signup' | 'verify';
+    targetView?: ViewMode;
+    reason?: string;
+  }>({
+    isOpen: false,
+    mode: 'login',
+  });
+
+  const handleOpenAuthModal = (
+    mode: 'login' | 'signup' | 'verify' = 'login',
+    targetView?: ViewMode,
+    reason?: string
+  ) => {
+    setAuthModalState({
+      isOpen: true,
+      mode,
+      targetView,
+      reason,
+    });
+  };
+
+  const handleCloseAuthModal = () => {
+    setAuthModalState((prev) => ({ ...prev, isOpen: false }));
+  };
+
+  const handleAuthSuccess = (user: UserAccount) => {
+    setCurrentUser(user);
+    localStorage.setItem('chungdoi_current_user', JSON.stringify(user));
+    const target = authModalState.targetView;
+    setAuthModalState({ isOpen: false, mode: 'login' });
+    if (target) {
+      setCurrentView(target);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (
+      currentView === 'login' ||
+      currentView === 'signup' ||
+      currentView === 'verify-magic-link' ||
+      currentView === 'xac-minh'
+    ) {
+      setCurrentView('dashboard');
+    }
+  };
 
   // Load state from localStorage if available
   const [weddingData, setWeddingData] = useState<WeddingData>(() => {
@@ -267,6 +314,7 @@ export default function App() {
         lang={lang}
         onToggleLang={handleToggleLang}
         currentUser={currentUser}
+        onOpenAuthModal={handleOpenAuthModal}
         onLogout={() => {
           setCurrentUser(null);
           localStorage.removeItem('chungdoi_current_user');
@@ -275,7 +323,7 @@ export default function App() {
       />
 
       {/* View Router */}
-      <main className="flex-1">
+      <main className="flex-1 pb-16 md:pb-0">
         {currentView === 'landing' && (
           <LandingPage
             onNavigate={(view) => {
@@ -284,6 +332,8 @@ export default function App() {
             }}
             onSelectTemplate={handleSelectTemplate}
             lang={lang}
+            currentUser={currentUser}
+            onOpenAuthModal={handleOpenAuthModal}
           />
         )}
 
@@ -304,6 +354,8 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             lang={lang}
+            currentUser={currentUser}
+            onOpenAuthModal={handleOpenAuthModal}
           />
         )}
 
@@ -399,11 +451,14 @@ export default function App() {
         )}
 
         {currentView === 'customs' && (
-          <CustomsAdvisorPage
+          <HoiHoaPage
+            user={currentUser}
+            weddingData={weddingData}
             onNavigate={(view) => {
               setCurrentView(view);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
+            onOpenAuthModal={handleOpenAuthModal}
           />
         )}
 
@@ -520,19 +575,36 @@ export default function App() {
           currentView === 'verify-magic-link' ||
           currentView === 'xac-minh') && (
           <AuthModalOrView
-            initialMode={currentView === 'verify-magic-link' || currentView === 'xac-minh' ? 'verify' : currentView}
+            initialMode={
+              currentView === 'verify-magic-link' || currentView === 'xac-minh'
+                ? 'verify'
+                : currentView
+            }
             onNavigate={(view) => {
               setCurrentView(view);
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
-            onLoginSuccess={(user) => {
-              setCurrentUser(user);
-              localStorage.setItem('chungdoi_current_user', JSON.stringify(user));
-              setCurrentView('dashboard');
-            }}
+            onLoginSuccess={handleAuthSuccess}
           />
         )}
       </main>
+
+      {/* Global Auth Popup Modal Dialog */}
+      {authModalState.isOpen && (
+        <AuthModalOrView
+          isModal={true}
+          initialMode={authModalState.mode}
+          onClose={handleCloseAuthModal}
+          promptReason={authModalState.reason}
+          targetView={authModalState.targetView}
+          onNavigate={(view) => {
+            handleCloseAuthModal();
+            setCurrentView(view);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }}
+          onLoginSuccess={handleAuthSuccess}
+        />
+      )}
 
       {/* Share Modal */}
       <ShareModal

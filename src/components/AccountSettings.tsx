@@ -101,7 +101,7 @@ export const AccountSettings: React.FC<AccountSettingsProps> = ({
               Cài Đặt Tài Khoản &amp; Gói Dịch Vụ
             </h1>
             <p className="text-xs sm:text-sm text-stone-500 mt-1">
-              Quản lý thông tin liên hệ của cặp đôi, mật khẩu và chi tiết đăng ký dịch vụ Chung Đôi.
+              Quản lý thông tin liên hệ của cặp đôi, mật khẩu và chi tiết đăng ký dịch vụ Cưới thôiii.
             </p>
           </div>
 

@@ -133,7 +133,7 @@ export const WeddingBuilder: React.FC<WeddingBuilderProps> = ({
         <div className="flex items-center space-x-3">
           <div>
             <h1 className="text-base font-bold text-stone-900 flex items-center space-x-2">
-              <span>Trình Thiết Kế Thiệp Cưới Chung Đôi</span>
+              <span>Trình Thiết Kế Thiệp Cưới Cưới thôiii</span>
               <span className="text-[10px] bg-emerald-100 text-emerald-700 px-2 py-0.5 rounded-full font-semibold">
                 Đang trực tuyến
               </span>

@@ -225,7 +225,7 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
             {/* Plan Cưới Inspiration Badge */}
             <div className="inline-flex items-center space-x-2 px-4 py-1.5 rounded-full bg-white border border-rose-200 shadow-xs text-rose-700 text-xs font-semibold mb-4">
               <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-              <span>Khám phá dịch vụ cưới chuẩn Plan Cưới &amp; ChungĐôi</span>
+              <span>Khám phá dịch vụ cưới chuẩn Cưới thôiii</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-stone-900 tracking-tight font-display">
@@ -541,7 +541,7 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
                           <div className="mt-3.5 bg-rose-50/70 border border-rose-100/90 rounded-xl p-2.5 text-[11px] space-y-1">
                             <div className="flex items-center space-x-1 text-rose-700 font-bold">
                               <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-                              <span>Ưu đãi độc quyền qua ChungĐôi:</span>
+                              <span>Ưu đãi độc quyền qua Cưới thôiii:</span>
                             </div>
                             <p className="text-stone-700 pl-4 font-medium line-clamp-1">
                               &bull; {vendor.perks[0]}
@@ -621,7 +621,7 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
                 </div>
                 <p className="text-[11px] text-emerald-600 font-semibold flex items-center space-x-1">
                   <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Tiết kiệm ước tính ~12.000.000đ khi đặt trọn gói qua ChungĐôi</span>
+                  <span>Tiết kiệm ước tính ~12.000.000đ khi đặt trọn gói qua Cưới thôiii</span>
                 </p>
               </div>
 
@@ -699,14 +699,14 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
               Bạn là Nhà hàng, Studio hay Chuyên gia cưới hỏi?
             </h3>
             <p className="text-xs sm:text-sm text-stone-300 leading-relaxed">
-              Gia nhập mạng lưới đối tác cùng Plan Cưới &amp; ChungĐôi để tiếp cận hơn 85.000+ cặp đôi cô dâu chú rể sắp tổ chức hôn lễ mỗi năm.
+              Gia nhập mạng lưới đối tác cùng Cưới thôiii để tiếp cận hơn 85.000+ cặp đôi cô dâu chú rể sắp tổ chức hôn lễ mỗi năm.
             </p>
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 shrink-0">
             <button
               onClick={() => {
-                alert('Vui lòng liên hệ hotline đối tác: 0988 123 456 hoặc gửi hồ sơ về partner@chungdoi.com');
+                alert('Vui lòng liên hệ hotline đối tác: 0988 123 456 hoặc gửi hồ sơ về partner@cuoithoiii.com');
               }}
               className="px-6 py-3 rounded-full bg-rose-600 hover:bg-rose-700 text-white text-xs sm:text-sm font-bold shadow-md transition-all"
             >
@@ -915,7 +915,7 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
                 <div className="bg-rose-50 border border-rose-200/80 rounded-2xl p-4">
                   <h4 className="font-bold text-rose-800 flex items-center space-x-1.5 text-sm mb-2">
                     <Sparkles className="w-4 h-4 text-rose-600" />
-                    <span>Đặc quyền ưu đãi độc quyền qua ChungĐôi &amp; Plan Cưới:</span>
+                    <span>Đặc quyền ưu đãi độc quyền qua Cưới thôiii:</span>
                   </h4>
                   <ul className="space-y-1.5 text-stone-700">
                     {activeVendor.perks.map((perk, idx) => (
@@ -1036,7 +1036,7 @@ export const WeddingServicesPage: React.FC<WeddingServicesPageProps> = ({ onNavi
                   Đã Gửi Yêu Cầu Thành Công!
                 </h3>
                 <p className="text-xs sm:text-sm text-stone-600 leading-relaxed">
-                  Đội ngũ đối tác <strong>{quotationVendor.name}</strong> và chuyên viên Plan Cưới sẽ liên hệ lại với bạn qua số điện thoại <strong>{quoteForm.phone || 'của bạn'}</strong> trong vòng 15 phút để gửi báo giá chi tiết và ưu đãi.
+                  Đội ngũ đối tác <strong>{quotationVendor.name}</strong> và chuyên viên Cưới thôiii sẽ liên hệ lại với bạn qua số điện thoại <strong>{quoteForm.phone || 'của bạn'}</strong> trong vòng 15 phút để gửi báo giá chi tiết và ưu đãi.
                 </p>
                 <button
                   onClick={() => setQuotationVendor(null)}

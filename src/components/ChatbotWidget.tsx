@@ -52,13 +52,13 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ currentUser, curre
     setQuestion('');
   };
 
-  const contextLabel = currentUser?.role === 'admin' ? 'Trợ lý quản trị' : 'Trợ lý ChungĐôi';
+  const contextLabel = currentUser?.role === 'admin' ? 'Trợ lý quản trị' : 'Trợ lý cưới AI "Hoa"';
   const isAuthScreen = ['login', 'signup', 'verify-magic-link', 'xac-minh'].includes(currentView);
 
   if (isAuthScreen) return null;
 
   return (
-    <div className="fixed bottom-5 right-5 z-50 sm:bottom-7 sm:right-7">
+    <div className="fixed bottom-20 right-4 z-40 md:bottom-7 md:right-7">
       {isOpen && (
         <section className="mb-3 flex h-[min(620px,calc(100vh-7rem))] w-[min(400px,calc(100vw-2rem))] flex-col overflow-hidden rounded-3xl border border-[#eadedb] bg-white shadow-2xl shadow-[#5c3030]/20">
           <header className="flex items-center justify-between bg-[#a9232c] px-4 py-3.5 text-white">
@@ -94,7 +94,7 @@ export const ChatbotWidget: React.FC<ChatbotWidgetProps> = ({ currentUser, curre
       <button onClick={() => setIsOpen((open) => !open)} className={`ml-auto flex h-14 w-14 items-center justify-center rounded-full text-white shadow-xl shadow-[#a9232c]/30 transition hover:scale-105 ${isOpen ? 'bg-[#6d2026]' : 'bg-[#a9232c]'}`} aria-label={isOpen ? 'Ẩn chatbot' : 'Mở chatbot'}>
         {isOpen ? <X className="h-6 w-6" /> : <Bot className="h-6 w-6" />}
       </button>
-      {!isOpen && <span className="pointer-events-none absolute bottom-16 right-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-[#6d4a47] shadow-lg">Hỏi về phong tục cưới</span>}
+      {!isOpen && <span className="pointer-events-none absolute bottom-16 right-0 whitespace-nowrap rounded-full bg-white px-3 py-1.5 text-[11px] font-semibold text-[#6d4a47] shadow-lg hidden sm:inline-block">Hỏi Hoa (AI) về cưới hỏi</span>}
     </div>
   );
 };

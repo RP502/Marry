@@ -60,7 +60,7 @@ export const BlogPage: React.FC<BlogPageProps> = ({ onNavigate, lang }) => {
                   <Clock className="w-3.5 h-3.5" />
                   <span>{readingPost.readTime}</span>
                 </span>
-                <span>Tác giả: Ban Biên Tập Chung Đôi</span>
+                <span>Tác giả: Ban Biên Tập Cưới thôiii</span>
               </div>
 
               <div className="rounded-2xl overflow-hidden mb-6 h-64 sm:h-80 bg-stone-100">

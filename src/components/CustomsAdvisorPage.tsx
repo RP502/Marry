@@ -35,14 +35,14 @@ export const CustomsAdvisorPage: React.FC<CustomsAdvisorPageProps> = ({ onNaviga
       <section className="bg-[#f5e9e4] px-5 py-14 sm:px-8 lg:px-12">
         <div className="mx-auto max-w-7xl">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3 py-1 text-xs font-bold uppercase tracking-[.16em] text-[#a9232c]">
-              <Sparkles className="h-3.5 w-3.5" /> Trợ lý phong tục cưới hỏi
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-3.5 py-1 text-xs font-bold uppercase tracking-[.16em] text-[#a9232c] shadow-xs">
+              <Sparkles className="h-3.5 w-3.5 text-amber-500" /> Hỏi Hoa (AI) · Trợ lý cưới hỏi thông minh
             </span>
-            <h1 className="mt-4 font-display text-4xl font-semibold text-[#3d302d] sm:text-6xl">Hỏi chuyện cưới hỏi Việt Nam</h1>
+            <h1 className="mt-4 font-display text-4xl font-semibold text-[#3d302d] sm:text-6xl">Hỏi Hoa (AI) - Cố vấn cưới hỏi Việt Nam</h1>
             <p className="mt-4 max-w-2xl leading-7 text-[#715f5c]">
-              Tra cứu nghi lễ, lễ vật và lưu ý theo vùng miền. Câu trả lời được đối chiếu từ kho tri thức đã tuyển chọn và luôn nêu rõ khi chưa đủ thông tin.
+              Trợ lý cưới AI &quot;Hoa&quot; đồng hành cùng cô dâu chú rể tra cứu nhanh nghi lễ, lễ vật, phong tục 3 miền và kế hoạch chuẩn bị đám cưới chỉn chu nhất.
             </p>
-            <button onClick={() => onNavigate('builder')} className="mt-7 rounded-full bg-[#a9232c] px-6 py-3 text-sm font-bold text-white">
+            <button onClick={() => onNavigate('builder')} className="mt-7 rounded-full bg-[#a9232c] px-6 py-3 text-sm font-bold text-white shadow-sm hover:bg-[#8e1d24] transition-colors">
               Tạo kế hoạch cưới của bạn <ChevronRight className="ml-1 inline h-4 w-4" />
             </button>
           </div>

@@ -1,21 +1,27 @@
 import React, { useState } from 'react';
-import { Palette, Eye, ArrowRight, Check, Sparkles, Filter } from 'lucide-react';
-import { WeddingTemplate, ViewMode } from '../types';
+import { Palette, Eye, ArrowRight } from 'lucide-react';
+import { WeddingTemplate, ViewMode, UserAccount } from '../types';
 import { WEDDING_TEMPLATES } from '../data/mockData';
 
 interface TemplatesPageProps {
   onSelectTemplate: (template: WeddingTemplate) => void;
   onNavigate: (view: ViewMode) => void;
   lang: 'vi' | 'en';
+  currentUser?: UserAccount | null;
+  onOpenAuthModal?: (
+    mode?: 'login' | 'signup',
+    targetView?: ViewMode,
+    reason?: string
+  ) => void;
 }
 
 export const TemplatesPage: React.FC<TemplatesPageProps> = ({
   onSelectTemplate,
   onNavigate,
-  lang,
+  currentUser,
+  onOpenAuthModal,
 }) => {
   const [selectedStyle, setSelectedStyle] = useState<string>('all');
-  const [previewTemplate, setPreviewTemplate] = useState<WeddingTemplate | null>(null);
 
   const filterStyles = [
     { id: 'all', label: 'Tất cả (6)' },
@@ -32,13 +38,26 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({
       ? WEDDING_TEMPLATES
       : WEDDING_TEMPLATES.filter((t) => t.style === selectedStyle);
 
+  const handleUseTemplate = (tpl: WeddingTemplate) => {
+    onSelectTemplate(tpl);
+    if (!currentUser) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login', 'builder', 'Vui lòng đăng nhập để chỉnh sửa mẫu thiệp này');
+      } else {
+        onNavigate('login');
+      }
+      return;
+    }
+    onNavigate('builder');
+  };
+
   return (
     <div className="min-h-screen bg-[#FAF8F5] py-10 sm:py-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Title Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <span className="text-xs font-bold uppercase tracking-widest text-rose-600 bg-rose-50 px-3 py-1 rounded-full">
-            Kho Thiết Kế Chung Đôi
+            Kho Thiết Kế Cưới thôiii
           </span>
           <h1 className="text-3xl sm:text-4xl font-bold font-display text-stone-900 mt-3">
             Bộ Sưu Tập Mẫu Thiệp Cưới &amp; Website Online
@@ -54,7 +73,7 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({
               <button
                 key={item.id}
                 onClick={() => setSelectedStyle(item.id)}
-                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all ${
+                className={`px-4 py-2 rounded-full text-xs font-semibold transition-all cursor-pointer ${
                   selectedStyle === item.id
                     ? 'bg-rose-500 text-white shadow-xs'
                     : 'bg-white text-stone-600 border border-stone-200 hover:border-rose-200'
@@ -107,18 +126,15 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({
                       onSelectTemplate(tpl);
                       onNavigate('invitation');
                     }}
-                    className="px-4 py-2.5 rounded-full bg-white text-stone-900 text-xs font-semibold shadow-lg hover:bg-stone-50 transition-colors flex items-center space-x-1.5"
+                    className="px-4 py-2.5 rounded-full bg-white text-stone-900 text-xs font-semibold shadow-lg hover:bg-stone-50 transition-colors flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Eye className="w-3.5 h-3.5 text-rose-500" />
                     <span>Xem thử thiệp</span>
                   </button>
 
                   <button
-                    onClick={() => {
-                      onSelectTemplate(tpl);
-                      onNavigate('builder');
-                    }}
-                    className="px-4 py-2.5 rounded-full bg-rose-500 text-white text-xs font-semibold shadow-lg hover:bg-rose-600 transition-colors flex items-center space-x-1.5"
+                    onClick={() => handleUseTemplate(tpl)}
+                    className="px-4 py-2.5 rounded-full bg-rose-500 text-white text-xs font-semibold shadow-lg hover:bg-rose-600 transition-colors flex items-center space-x-1.5 cursor-pointer"
                   >
                     <Palette className="w-3.5 h-3.5" />
                     <span>Dùng mẫu này</span>
@@ -143,11 +159,8 @@ export const TemplatesPage: React.FC<TemplatesPageProps> = ({
                   </span>
 
                   <button
-                    onClick={() => {
-                      onSelectTemplate(tpl);
-                      onNavigate('builder');
-                    }}
-                    className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center space-x-1"
+                    onClick={() => handleUseTemplate(tpl)}
+                    className="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center space-x-1 cursor-pointer"
                   >
                     <span>Bắt đầu sửa</span>
                     <ArrowRight className="w-3.5 h-3.5" />

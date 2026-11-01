@@ -1,26 +1,19 @@
 import React, { useState } from 'react';
 import {
-  Heart,
   Sparkles,
-  Layout,
-  Eye,
-  Users,
-  PlusCircle,
+  Home,
+  ClipboardCheck,
+  Compass,
+  Bot,
+  User,
+  ShieldAlert,
   Globe,
   Menu,
   X,
-  Wrench,
-  BookOpen,
-  MessageCircle,
-  Shirt,
-  Compass,
-  Tag,
-  LayoutDashboard,
-  ShieldAlert,
-  User,
-  LogOut,
+  ChevronRight,
 } from 'lucide-react';
 import { ViewMode, Language, UserAccount } from '../types';
+import { CuoiThoiiiLogo } from './CuoiThoiiiLogo';
 
 interface NavbarProps {
   currentView: ViewMode;
@@ -29,6 +22,11 @@ interface NavbarProps {
   onToggleLang: () => void;
   currentUser?: UserAccount | null;
   onLogout?: () => void;
+  onOpenAuthModal?: (
+    mode?: 'login' | 'signup',
+    targetView?: ViewMode,
+    reason?: string
+  ) => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -37,269 +35,337 @@ export const Navbar: React.FC<NavbarProps> = ({
   lang,
   onToggleLang,
   currentUser,
-  onLogout,
+  onOpenAuthModal,
 }) => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
-  const navItems: Array<{ id: ViewMode; labelVi: string; labelEn: string; icon: React.ReactNode }> = [
+  // 5 main navigation items: Trang chủ, Chuẩn bị, Khám phá, Hỏi Hoa (AI), Của tôi
+  const navItems = [
     {
-      id: 'kham-pha',
+      id: 'landing' as ViewMode,
+      labelVi: 'Trang chủ',
+      labelEn: 'Home',
+      icon: Home,
+      isActive: (v: ViewMode) => v === 'landing',
+    },
+    {
+      id: 'tools' as ViewMode,
+      labelVi: 'Chuẩn bị',
+      labelEn: 'Preparation',
+      icon: ClipboardCheck,
+      isActive: (v: ViewMode) =>
+        [
+          'tools',
+          'wedding-plan',
+          'budget-calc',
+          'invitation-messages',
+          'speeches',
+          'save-the-date',
+          'compress-image',
+          'seating-chart',
+          'lunar-converter',
+          'templates',
+        ].includes(v),
+    },
+    {
+      id: 'kham-pha' as ViewMode,
       labelVi: 'Khám phá',
       labelEn: 'Explore',
-      icon: <Compass className="w-3.5 h-3.5" />,
+      icon: Compass,
+      isActive: (v: ViewMode) => ['kham-pha', 'services'].includes(v),
     },
     {
-      id: 'customs',
-      labelVi: 'Phong tục & AI',
-      labelEn: 'Customs AI',
-      icon: <MessageCircle className="w-3.5 h-3.5" />,
+      id: 'customs' as ViewMode,
+      labelVi: 'Hỏi Hoa (AI)',
+      labelEn: 'Ask Hoa (AI)',
+      icon: Bot,
+      isAi: true,
+      isActive: (v: ViewMode) => v === 'customs',
     },
     {
-      id: 'templates',
-      labelVi: 'Kho mẫu thiệp',
-      labelEn: 'Templates',
-      icon: <Layout className="w-3.5 h-3.5" />,
-    },
-    {
-      id: 'pricing',
-      labelVi: 'Bảng giá',
-      labelEn: 'Pricing',
-      icon: <Tag className="w-3.5 h-3.5" />,
-    },
-    {
-      id: 'blog',
-      labelVi: 'Cẩm nang',
-      labelEn: 'Guides & Blog',
-      icon: <BookOpen className="w-3.5 h-3.5" />,
+      id: 'dashboard' as ViewMode,
+      labelVi: 'Của tôi',
+      labelEn: 'My Wedding',
+      icon: User,
+      isActive: (v: ViewMode) =>
+        ['dashboard', 'account', 'rsvp-dashboard', 'xem-khach', 'login', 'signup'].includes(v),
     },
   ];
 
+  // Intercept navigation for protected views when not logged in
+  const handleNavClick = (itemId: ViewMode) => {
+    if (itemId === 'tools' && !currentUser) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login', 'tools', 'Vui lòng đăng nhập để mở tính năng Chuẩn bị');
+      } else {
+        onNavigate('login');
+      }
+      return;
+    }
+
+    if (itemId === 'customs' && !currentUser) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login', 'customs', 'Vui lòng đăng nhập để trò chuyện cùng Hỏi Hoa (AI)');
+      } else {
+        onNavigate('login');
+      }
+      return;
+    }
+
+    if (itemId === 'dashboard' && !currentUser) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login', 'dashboard', 'Vui lòng đăng nhập để xem thông tin Đám cưới của bạn');
+      } else {
+        onNavigate('login');
+      }
+      return;
+    }
+
+    onNavigate(itemId);
+  };
+
+  // Intercept "Tạo thiệp" actions when not logged in -> Open login popup / navigate to login
+  const handleCreateInvitationClick = () => {
+    if (!currentUser) {
+      if (onOpenAuthModal) {
+        onOpenAuthModal('login', 'builder', 'Vui lòng đăng nhập để bắt đầu tạo thiệp cưới');
+      } else {
+        onNavigate('login');
+      }
+      return;
+    }
+    onNavigate('builder');
+  };
+
   return (
-    <header className="sticky top-0 z-40 bg-[#fbf8f3]/95 backdrop-blur-md border-b border-[#e9dfd5]">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-[74px]">
-          {/* Logo */}
-          <div
-            id="brand-logo"
-            onClick={() => onNavigate('landing')}
-            className="flex items-center space-x-2.5 cursor-pointer group select-none"
-          >
-            <div className="w-10 h-10 rounded-full bg-[#a9232c] flex items-center justify-center text-[#f9e9d8] shadow-sm shadow-rose-200 group-hover:scale-105 transition-transform">
-              <Heart className="w-5 h-5 fill-white" />
+    <>
+      {/* Top Navbar */}
+      <header className="sticky top-0 z-40 bg-[#fbf8f3]/95 backdrop-blur-md border-b border-[#e9dfd5]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-[70px]">
+            {/* Logo Đặc Biệt & Font chữ Cưới thôiii */}
+            <div id="brand-logo" className="shrink-0">
+              <CuoiThoiiiLogo
+                size="md"
+                variant="dark"
+                onClick={() => onNavigate('landing')}
+              />
             </div>
-            <div>
-              <div className="flex items-baseline space-x-1.5">
-                <span className="text-[22px] font-semibold tracking-tight text-[#432d29] font-display">
-                  ChungĐôi
-                </span>
-                <span className="text-[11px] font-semibold text-[#a9232c] tracking-wide">
-                  .com
-                </span>
-              </div>
-              <p className="text-[10px] text-stone-700 hidden sm:block -mt-0.5">
-                Thiệp cưới &amp; Website đám cưới online
-              </p>
+
+            {/* Desktop 5 Navigation Items */}
+            <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+              {navItems.map((item) => {
+                const active = item.isActive(currentView);
+                const IconComponent = item.icon;
+                return (
+                  <button
+                    key={item.id}
+                    id={`nav-btn-${item.id}`}
+                    onClick={() => handleNavClick(item.id)}
+                    className={`relative flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-sm font-medium transition-all ${
+                      active
+                        ? 'bg-rose-50 text-[#a9232c] font-semibold shadow-xs'
+                        : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100/70'
+                    }`}
+                  >
+                    <IconComponent
+                      className={`w-4 h-4 transition-transform ${
+                        active ? 'text-[#a9232c] scale-105' : 'text-stone-500'
+                      }`}
+                    />
+                    <span>{lang === 'vi' ? item.labelVi : item.labelEn}</span>
+                    {item.isAi && (
+                      <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded-full text-[9px] font-bold bg-linear-to-r from-rose-500 via-pink-500 to-amber-500 text-white shadow-xs">
+                        <Sparkles className="w-2.5 h-2.5" />
+                        AI
+                      </span>
+                    )}
+                    {active && (
+                      <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#a9232c] rounded-full" />
+                    )}
+                  </button>
+                );
+              })}
+            </nav>
+
+            {/* Right Actions */}
+            <div className="hidden md:flex items-center space-x-3">
+              {/* Language Switcher */}
+              <button
+                id="lang-toggle-btn"
+                onClick={onToggleLang}
+                className="flex items-center space-x-1 px-2.5 py-1.5 rounded-lg border border-stone-200 text-xs font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
+                title="Chuyển ngôn ngữ / Change Language"
+              >
+                <Globe className="w-3.5 h-3.5 text-stone-500" />
+                <span>{lang === 'vi' ? 'VI' : 'EN'}</span>
+              </button>
+
+              {currentUser?.role === 'admin' && (
+                <button
+                  onClick={() => onNavigate('admin')}
+                  className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                    currentView === 'admin'
+                      ? 'bg-rose-600 text-white shadow-sm'
+                      : 'bg-stone-900 text-rose-300 hover:bg-rose-700 hover:text-white'
+                  }`}
+                >
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  <span>Admin</span>
+                </button>
+              )}
+
+              {/* Primary CTA: Tạo thiệp ngay (Nếu chưa đăng nhập -> mở popup đăng nhập) */}
+              <button
+                id="header-create-btn"
+                onClick={handleCreateInvitationClick}
+                className="px-4 py-2 rounded-full bg-linear-to-r from-rose-500 to-[#a9232c] hover:from-rose-600 hover:to-[#8f1d24] text-white text-sm font-semibold shadow-sm shadow-rose-200 hover:shadow-md transition-all active:scale-95 flex items-center space-x-1.5 cursor-pointer"
+              >
+                <span>{lang === 'vi' ? 'Tạo thiệp ngay' : 'Create Invitation'}</span>
+              </button>
+            </div>
+
+            {/* Mobile Header Actions (Tạo thiệp + Language + Menu) */}
+            <div className="flex md:hidden items-center space-x-2">
+              <button
+                onClick={handleCreateInvitationClick}
+                className="px-3 py-1.5 rounded-full bg-[#a9232c] text-white text-xs font-semibold shadow-xs cursor-pointer"
+              >
+                {lang === 'vi' ? 'Tạo thiệp' : 'Create'}
+              </button>
+              <button
+                onClick={onToggleLang}
+                className="p-1.5 text-stone-600 rounded-lg hover:bg-stone-100 text-xs font-bold border border-stone-200"
+              >
+                {lang === 'vi' ? 'VI' : 'EN'}
+              </button>
+              <button
+                id="mobile-menu-toggle"
+                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                className="p-2 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:outline-hidden"
+                aria-label="Toggle navigation menu"
+              >
+                {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              </button>
             </div>
           </div>
+        </div>
 
-          {/* Desktop Nav Items */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
+        {/* Mobile Dropdown Drawer */}
+        {mobileMenuOpen && (
+          <div className="md:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-xl animate-in fade-in slide-in-from-top-2 duration-200">
+            <div className="text-xs font-semibold uppercase tracking-wider text-stone-400 px-3 pt-1">
+              Điều hướng chính
+            </div>
             {navItems.map((item) => {
-              const isActive =
-                currentView === item.id || (item.id === 'kham-pha' && currentView === 'services');
+              const active = item.isActive(currentView);
+              const IconComponent = item.icon;
               return (
                 <button
                   key={item.id}
-                  id={`nav-btn-${item.id}`}
-                  onClick={() => onNavigate(item.id)}
-                  className={`flex items-center space-x-1.5 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-rose-50 text-rose-700 font-semibold'
-                      : 'text-stone-600 hover:text-stone-900 hover:bg-stone-100'
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    handleNavClick(item.id);
+                  }}
+                  className={`w-full flex items-center justify-between px-3.5 py-3 rounded-xl text-base font-medium transition-colors cursor-pointer ${
+                    active
+                      ? 'bg-rose-50 text-[#a9232c] font-semibold'
+                      : 'text-stone-700 hover:bg-stone-50'
                   }`}
                 >
-                  <span className={isActive ? 'text-rose-600' : 'text-stone-700'}>
-                    {item.icon}
-                  </span>
-                  <span>{lang === 'vi' ? item.labelVi : item.labelEn}</span>
+                  <div className="flex items-center space-x-3">
+                    <IconComponent
+                      className={`w-5 h-5 ${active ? 'text-[#a9232c]' : 'text-stone-500'}`}
+                    />
+                    <span>{lang === 'vi' ? item.labelVi : item.labelEn}</span>
+                  </div>
+                  {item.isAi ? (
+                    <span className="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-[10px] font-bold bg-linear-to-r from-rose-500 to-amber-500 text-white">
+                      <Sparkles className="w-3 h-3" />
+                      AI
+                    </span>
+                  ) : (
+                    <ChevronRight className="w-4 h-4 text-stone-300" />
+                  )}
                 </button>
               );
             })}
-          </nav>
 
-          {/* Right Actions */}
-          <div className="hidden md:flex items-center space-x-3">
-            {/* Language Switcher */}
-            <button
-              id="lang-toggle-btn"
-              onClick={onToggleLang}
-              className="flex items-center space-x-1 px-2.5 py-1.5 rounded-md border border-stone-200 text-xs font-semibold text-stone-600 hover:bg-stone-50 transition-colors"
-              title="Chuyển ngôn ngữ / Change Language"
-            >
-              <Globe className="w-3.5 h-3.5 text-stone-700" />
-              <span>{lang === 'vi' ? 'VI' : 'EN'}</span>
-            </button>
-
-            {currentUser ? (
-              <div className="flex items-center space-x-2">
-                {currentUser.role === 'admin' && (
-                  <button
-                    onClick={() => onNavigate('admin')}
-                    className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                      currentView === 'admin'
-                        ? 'bg-rose-600 text-white shadow-sm'
-                        : 'bg-stone-900 text-rose-300 hover:bg-rose-700 hover:text-white'
-                    }`}
-                  >
-                    <ShieldAlert className="w-3.5 h-3.5" />
-                    <span>Admin</span>
-                  </button>
-                )}
-
+            {/* Extra Admin link if admin */}
+            {currentUser?.role === 'admin' && (
+              <div className="pt-2 border-t border-stone-100">
                 <button
-                  onClick={() => onNavigate('dashboard')}
-                  className={`flex items-center space-x-1 px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
-                    currentView === 'dashboard'
-                      ? 'bg-rose-50 text-rose-700 border border-rose-200'
-                      : 'text-stone-700 hover:bg-stone-100'
-                  }`}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    onNavigate('admin');
+                  }}
+                  className="w-full flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-sm font-bold text-white bg-stone-900 cursor-pointer"
                 >
-                  <LayoutDashboard className="w-3.5 h-3.5" />
-                  <span>Dashboard</span>
-                </button>
-
-                <button
-                  onClick={() => onNavigate('account')}
-                  className="w-8 h-8 rounded-full bg-rose-100 text-rose-700 font-bold text-xs flex items-center justify-center hover:ring-2 hover:ring-rose-400 transition-all"
-                  title="Cài đặt tài khoản"
-                >
-                  <User className="w-4 h-4" />
+                  <ShieldAlert className="w-4 h-4 text-rose-400" />
+                  <span>Hệ Thống Admin Master</span>
                 </button>
               </div>
-            ) : (
-              <button
-                onClick={() => onNavigate('login')}
-                className="px-3 py-1.5 rounded-xl text-xs font-semibold text-stone-700 hover:bg-stone-100 transition-colors"
-              >
-                Đăng nhập
-              </button>
             )}
 
-            {/* Primary CTA */}
-            <button
-              id="header-create-btn"
-              onClick={() => onNavigate('builder')}
-              className="px-4 py-2 rounded-full bg-linear-to-r from-rose-500 to-rose-600 hover:from-rose-600 hover:to-rose-700 text-white text-sm font-medium shadow-sm shadow-rose-200 hover:shadow-md transition-all active:scale-95"
-            >
-              {lang === 'vi' ? 'Tạo thiệp ngay' : 'Create Invitation'}
-            </button>
-          </div>
-
-          {/* Mobile hamburger button */}
-          <div className="flex md:hidden items-center space-x-2">
-            <button
-              onClick={onToggleLang}
-              className="p-2 text-stone-600 rounded-md hover:bg-stone-100 text-xs font-bold"
-            >
-              {lang === 'vi' ? 'VI' : 'EN'}
-            </button>
-            <button
-              id="mobile-menu-toggle"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="p-2 rounded-lg text-stone-600 hover:text-stone-900 hover:bg-stone-100 focus:outline-hidden"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Mobile Drawer */}
-      {mobileMenuOpen && (
-        <div className="md:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-5 space-y-2 shadow-lg">
-          {navItems.map((item) => (
-            <button
-              key={item.id}
-              onClick={() => {
-                onNavigate(item.id);
-                setMobileMenuOpen(false);
-              }}
-              className={`w-full flex items-center space-x-3 px-3 py-2.5 rounded-lg text-base font-medium ${
-                currentView === item.id || (item.id === 'kham-pha' && currentView === 'services')
-                  ? 'bg-rose-50 text-rose-700 font-semibold'
-                  : 'text-stone-600 hover:bg-stone-50'
-              }`}
-            >
-              <span className="text-rose-500">{item.icon}</span>
-              <span>{lang === 'vi' ? item.labelVi : item.labelEn}</span>
-            </button>
-          ))}
-          {/* Additional Admin & User links in mobile drawer */}
-          <div className="pt-2 border-t border-stone-100 space-y-1">
-            {currentUser ? (
-              <>
-                <button
-                  onClick={() => {
-                    onNavigate('dashboard');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-semibold text-rose-600 bg-rose-50"
-                >
-                  <LayoutDashboard className="w-4 h-4" />
-                  <span>Trang Quản Lý (Dashboard)</span>
-                </button>
-
-                {currentUser.role === 'admin' && (
-                  <button
-                    onClick={() => {
-                      onNavigate('admin');
-                      setMobileMenuOpen(false);
-                    }}
-                    className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-bold text-white bg-stone-900"
-                  >
-                    <ShieldAlert className="w-4 h-4 text-rose-400" />
-                    <span>Hệ Thống Admin Master</span>
-                  </button>
-                )}
-
-                <button
-                  onClick={() => {
-                    onNavigate('account');
-                    setMobileMenuOpen(false);
-                  }}
-                  className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-medium text-stone-700 hover:bg-stone-50"
-                >
-                  <User className="w-4 h-4 text-stone-500" />
-                  <span>Cài Đặt Tài Khoản</span>
-                </button>
-              </>
-            ) : (
+            <div className="pt-2">
               <button
                 onClick={() => {
-                  onNavigate('login');
                   setMobileMenuOpen(false);
+                  handleCreateInvitationClick();
                 }}
-                className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm font-semibold text-stone-800 hover:bg-stone-50"
+                className="w-full py-3 rounded-xl bg-linear-to-r from-rose-500 to-[#a9232c] text-white font-semibold text-center shadow-sm cursor-pointer"
               >
-                <User className="w-4 h-4 text-stone-500" />
-                <span>Đăng nhập / Đăng ký</span>
+                {lang === 'vi' ? 'Bắt đầu tạo thiệp miễn phí' : 'Start Creating for Free'}
               </button>
-            )}
+            </div>
           </div>
+        )}
+      </header>
 
-          <div className="pt-2">
-            <button
-              onClick={() => {
-                onNavigate('builder');
-                setMobileMenuOpen(false);
-              }}
-              className="w-full py-3 rounded-xl bg-rose-500 text-white font-semibold text-center shadow-sm"
-            >
-              {lang === 'vi' ? 'Bắt đầu tạo thiệp miễn phí' : 'Start Creating for Free'}
-            </button>
-          </div>
+      {/* Mobile Bottom Navigation Bar (5 tabs) */}
+      <nav
+        aria-label="Mobile Navigation"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-stone-200/90 shadow-[0_-4px_12px_rgba(0,0,0,0.05)] pb-safe"
+      >
+        <div className="grid grid-cols-5 h-[58px] items-center px-1">
+          {navItems.map((item) => {
+            const active = item.isActive(currentView);
+            const IconComponent = item.icon;
+            return (
+              <button
+                key={`mobile-bottom-${item.id}`}
+                onClick={() => handleNavClick(item.id)}
+                className={`flex flex-col items-center justify-center h-full relative py-1 transition-all cursor-pointer ${
+                  active ? 'text-[#a9232c]' : 'text-stone-500 hover:text-stone-800'
+                }`}
+              >
+                <div className="relative">
+                  <IconComponent
+                    className={`w-5 h-5 transition-transform ${
+                      active ? 'scale-110 stroke-[2.4]' : 'stroke-[1.7]'
+                    }`}
+                  />
+                  {item.isAi && (
+                    <span className="absolute -top-1 -right-2.5 px-1 py-0.2 rounded-full text-[8px] font-extrabold bg-linear-to-r from-rose-500 to-amber-500 text-white leading-none">
+                      AI
+                    </span>
+                  )}
+                </div>
+                <span
+                  className={`text-[10px] mt-1 tracking-tight truncate max-w-[64px] ${
+                    active ? 'font-bold text-[#a9232c]' : 'font-medium'
+                  }`}
+                >
+                  {item.labelVi}
+                </span>
+                {active && (
+                  <span className="absolute bottom-0.5 w-6 h-0.5 bg-[#a9232c] rounded-full" />
+                )}
+              </button>
+            );
+          })}
         </div>
-      )}
-    </header>
+      </nav>
+    </>
   );
 };

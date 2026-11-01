@@ -231,7 +231,7 @@ export const InvitationView: React.FC<InvitationViewProps> = ({
               className="mt-4 text-xs text-stone-400 hover:text-stone-600 flex items-center space-x-1"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
-              <span>Quay lại trang chủ Chung Đôi</span>
+              <span>Quay lại trang chủ Cưới thôiii</span>
             </button>
           )}
         </div>
@@ -1128,7 +1128,7 @@ export const InvitationView: React.FC<InvitationViewProps> = ({
             Chân thành cảm ơn sự hiện diện và những lời chúc phúc của quý khách!
           </p>
           <div className="pt-4 text-[10px] text-stone-400">
-            Được tạo bởi nền tảng thiệp cưới trực tuyến <strong>ChungDoi.com</strong>
+            Được tạo bởi nền tảng thiệp cưới trực tuyến <strong>Cưới thôiii</strong>
           </div>
         </footer>
       </div>
